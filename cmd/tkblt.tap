@@ -1,0 +1,24 @@
+format  {TclDevKit Project File}
+fmtver  2.0
+fmttool {TclDevKit TclApp PackageDefinition} 5.4
+
+##  Saved at : Thu Jun 28 14:11:19 JST 2018
+##  By       : yusuke@yusuke-t440p
+
+########
+#####
+###
+##
+#
+
+Package {tkblt 3.2.9}
+Base    @TAP_DIR@
+Path    graph.tcl
+Path    pkgIndex.tcl
+Path    tkblt32.dll
+
+#
+##
+###
+#####
+########
