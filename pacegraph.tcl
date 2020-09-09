@@ -111,7 +111,7 @@ proc MakeGraph {units} {
             -hide no 
     Blt_ZoomStack .g
 #Blt_Crosshairs .g
-    Blt_ActiveLegend .g
+#    Blt_ActiveLegend .g
 #Blt_ClosestPoint .g
 }
 
@@ -122,47 +122,47 @@ proc FormatYLabel {widget y} {
 }
 
 proc doFindElement { g x y } {
+    # Remove any previous markers.
+    catch {eval $g marker delete [$g marker names "bltClosest_*"]}
     # What elements are closest to the current x,y coordinates?
     # myinfo should include name, x, y, index, dist 
     array set myinfo [$g element closest $x $y ]
-    # Remove any previous markers.
-    catch {eval $g marker delete [$g marker names "bltClosest_*"]}
     if { ![info exists myinfo(name)] } {
 	return
     }
-    # Generate a new marker taking care to use the correct axis
-    # for generating values.
-    set markerName "bltClosest_$myinfo(name)"
-    if {$myinfo(name) == "line2"} {set yaxis y2} else {set yaxis y}
-    set elemlabel [$g element cget $myinfo(name) -label]
-    set xtitle [$g axis cget x -title]
-    # Hmmm...special cases are bad.  Can we do this cleaner?
+    # Retrieve the x and y values, the axis used (y or y2), the axis label & 
+    # foreground color for the element under the cursor.
     if {$myinfo(name) == "line2"} {
+        set yaxis y2
         set ytitle [$g axis cget y2 -title]
     } else {
+        set yaxis y
         set ytitle [$g axis cget y -title]
     }
+    set elemlabel [$g element cget $myinfo(name) -label]
+    set xtitle [$g axis cget x -title]
     set xval $myinfo(x)
     set yval $myinfo(y)
     # Hmmm...special cases are bad.  Can we do this cleaner?
     if {[string range $ytitle 0 3] == "Pace"} {set yval [FormatYLabel $g [expr int($myinfo(y))]]}
-
-#-text "$myinfo(name): x $myinfo(x)\ny $myinfo(y)" 
+    # Generate a new marker taking care to use the correct axis
+    # for generating values.
+    set markerName "bltClosest_$myinfo(name)"
     $g marker create text $markerName \
 	-text "$xtitle = $xval\n$ytitle = $yval" \
         -coords "$myinfo(x) $myinfo(y)" \
         -mapx x -mapy $yaxis \
-	-anchor s -justify center \
-	-yoffset 0.5i -bg {} 
+	-anchor s -justify left \
+	-yoffset 0.5i -bg {white} 
 
 }
 
 PopulateVectors $unitsystem
 MakeGraph $unitsystem
 
-# Bind a control middle mouse press event to the procedure that generates
+# Bind a motion event to the procedure that generates
 # a marker for the points on the graph.
-bind mytag <Control-ButtonPress-2>  { doFindElement %W %x %y }
+bind mytag <Motion>  { doFindElement %W %x %y }
 blt::AddBindTag .g mytag
 
 pack .g -expand 1 -fill both
