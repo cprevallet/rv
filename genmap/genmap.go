@@ -29,7 +29,10 @@ func readInputs(filename string, filepath string) ([]s2.LatLng) {
         if err != nil {panic(err)}
         lng, err := strconv.ParseFloat(line[4], 64)
         if err != nil {panic(err)}
-        position = append(position, s2.LatLngFromDegrees(lat, lng))
+        // Filter out garbage values.  Lat/lng 0,0 is off the coast of Africa.
+        if ((lat != 0.0) && (lng != 0.0)) {
+                position = append(position, s2.LatLngFromDegrees(lat, lng))
+        }
     }
     return position
 }
