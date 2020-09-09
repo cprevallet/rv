@@ -144,9 +144,10 @@ proc doFindElement { g x y } {
         set ytitle [$g axis cget y -title]
     }
     set elemlabel [$g element cget $myinfo(name) -label]
+    set elemcolor [$g element cget $myinfo(name) -color]
     set xtitle [$g axis cget x -title]
-    set xval $myinfo(x)
-    set yval $myinfo(y)
+    set xval [format %7.2f $myinfo(x)]
+    set yval [format %7.2f $myinfo(y)]
     # Hmmm...special cases are bad.  Can we do this cleaner?
     if {[string range $ytitle 0 3] == "Pace"} {set yval [FormatYLabel $g [expr int($myinfo(y))]]}
     # Generate a new marker taking care to use the correct axis
@@ -157,7 +158,7 @@ proc doFindElement { g x y } {
         -coords "$myinfo(x) $myinfo(y)" \
         -mapx x -mapy $yaxis \
 	-anchor s -justify left \
-	-yoffset 0.5i -bg {white} 
+	-yoffset 0.5i -fill $elemcolor -outline white
 
 }
 
