@@ -47,7 +47,6 @@ proc PopulateVectors {units} {
             close $f
             break
         }
-        puts $line
         # Skip the header.
         if {[string is alpha [string index $line 0]] == "1"} { 
             continue 
@@ -86,18 +85,18 @@ proc MakeTable {units t} {
             close $f
             break
         }
-        puts $line
         # Skip the header.
         if {[string is alpha [string index $line 0]] == "1"} { 
             continue 
         }
         set data [csv::split $line ","]    
-        set c2 [lindex $data 5]
-        set c3 [lindex $data 6]
+        set c3 [format %7.0f [lindex $data 6]]
+
+        set c2 [FormatYLabel .g [expr int([lindex $data 5]) ]]
         if {$units == "metric"} {
-                set c1 [units::convert [concat [lindex $data 4] "meters"] "kilometers"]
+                set c1 [format %5.2f [units::convert [concat [lindex $data 4] "meters"] "kilometers"]]
         } else {
-                set c1 [units::convert [concat [lindex $data 4] "meters"] "miles"]
+                set c1 [format %5.2f [units::convert [concat [lindex $data 4] "meters"] "miles"] ]
         }
         $t insert end [list $c1 $c2 $c3]
     }
