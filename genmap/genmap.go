@@ -25,13 +25,12 @@ func readInputs(filename string, filepath string) ([]s2.LatLng) {
         } else if error != nil {
             panic(error)
         }
-        lat, err := strconv.ParseFloat(line[3], 64)
-        if err != nil {panic(err)}
-        lng, err := strconv.ParseFloat(line[4], 64)
-        if err != nil {panic(err)}
-        // Filter out garbage values.  Lat/lng 0,0 is off the coast of Africa.
-        if ((lat != 0.0) && (lng != 0.0)) {
-                position = append(position, s2.LatLngFromDegrees(lat, lng))
+        if (line[3] != "Invalid") && (line[4] != "Invalid") {
+            lat, err := strconv.ParseFloat(line[3], 64)
+            if err != nil {panic(err)}
+            lng, err := strconv.ParseFloat(line[4], 64)
+            if err != nil {panic(err)}
+            position = append(position, s2.LatLngFromDegrees(lat, lng))
         }
     }
     return position

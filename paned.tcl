@@ -18,6 +18,7 @@ vector create dist
 vector create pace
 vector create altitude
 vector create cadence
+vector create heartrate
 
 proc makePace {speed} {
     # Speed -> pace careful not to divide by zero.
@@ -52,11 +53,13 @@ proc PopulateVectors {units} {
             pace append [units::convert [concat [makePace [lindex $data 1]] "seconds/meter"] "seconds/kilometer"]
             altitude append [units::convert [concat [lindex $data 5] "meters"] "meters"]
             cadence append [lindex $data 6]
+            heartrate append [lindex $data 7]
         } else {
             dist append [units::convert [concat [lindex $data 0] "meters"] "miles"]
             pace append [units::convert [concat [makePace [lindex $data 1]] "seconds/meter"] "seconds/mile"]
             altitude append [units::convert [concat [lindex $data 5] "meters"] "foot"]
             cadence append [lindex $data 6]
+            heartrate append [lindex $data 7]
         }
     }
 }
