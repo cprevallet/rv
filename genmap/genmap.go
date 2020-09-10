@@ -3,6 +3,7 @@ package genmap
 import (
   "bufio"
   "encoding/csv"
+//  "fmt"
   "image"
   "image/color"
   //"image/png"
@@ -25,6 +26,7 @@ func readInputs(filename string, filepath string) ([]s2.LatLng) {
         } else if error != nil {
             panic(error)
         }
+        if (line[0] == "Distance(m)") { continue }  //skip the header
         if (line[3] != "Invalid") && (line[4] != "Invalid") {
             lat, err := strconv.ParseFloat(line[3], 64)
             if err != nil {panic(err)}

@@ -47,6 +47,11 @@ proc PopulateVectors {units} {
             close $f
             break
         }
+        puts $line
+        # Skip the header.
+        if {[string is alpha [string index $line 0]] == "1"} { 
+            continue 
+        }
         set data [csv::split $line ","]
         if {$units == "metric"} {
             dist append [units::convert [concat [lindex $data 0] "meters"] "kilometers"]
