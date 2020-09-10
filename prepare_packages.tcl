@@ -1,6 +1,7 @@
 # Identify and load the dependent packages in an OS specific manner.
 # Separate the boilerplate here so that it may be reused.
 package require fileutil
+package require tablelist
 
 # Load the packages from appdlls directory
 set dllfilepath [ file join [pwd] appdlls ]

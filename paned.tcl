@@ -39,7 +39,7 @@ proc PopulateVectors {units} {
     set tempdir [ ::fileutil::tempdir ]
     createCsv [ GetFitFile ] csv.dat $tempdir
 
-    # Read in the csv file.
+    # Read in the activity csv file.
     set f [open ${tempdir}[file separator]csv.dat r]
     while {1} {
         set line [gets $f]
@@ -67,11 +67,41 @@ proc PopulateVectors {units} {
             heartrate append [lindex $data 7]
         }
     }
+
 }
 
 # Create a paned window object. Must be done before creating
 # objects to add into it. Why????
 panedwindow .pnd -orient h -opaqueresize 0
+
+# Create the table widget.
+proc MakeTable {units t} {
+
+    # Read in the lap csv file.
+    set tempdir [ ::fileutil::tempdir ]
+    set f [open ${tempdir}[file separator]csv_lap.dat r]
+    while {1} {
+        set line [gets $f]
+        if {[eof $f]} {
+            close $f
+            break
+        }
+        puts $line
+        # Skip the header.
+        if {[string is alpha [string index $line 0]] == "1"} { 
+            continue 
+        }
+        set data [csv::split $line ","]    
+        set c2 [lindex $data 5]
+        set c3 [lindex $data 6]
+        if {$units == "metric"} {
+                set c1 [units::convert [concat [lindex $data 4] "meters"] "kilometers"]
+        } else {
+                set c1 [units::convert [concat [lindex $data 4] "meters"] "miles"]
+        }
+        $t insert end [list $c1 $c2 $c3]
+    }
+}
 
 # Create the graph widget.
 proc MakeGraph {units} {
@@ -229,20 +259,25 @@ proc MakeMap {} {
 
 # Handle loading a new file.
 proc Update {units} {
+    #clear out the old data first
+    .t delete 0 last
     dist set {}
     pace set {}
     altitude set {}
     cadence set {}
     heartrate set {}
     PopulateVectors $units
+    MakeTable $units .t
     MakeMap
 }
 
 # Initialize data and GUI.
 label .myLabel
+tablelist::tablelist .t -columns {0 "Distance" 0 "Time" 0 "Calories"} -stretch all -background white
 PopulateVectors $unitsystem
 MakeGraph  $unitsystem
 MakeGraph2 $unitsystem
+MakeTable $unitsystem .t
 MakeMap
 
 # Bind a motion event to the procedure that generates
@@ -272,8 +307,8 @@ button .f.b1 -text "Pace vs. Altitude" -command  "SwapAlt"
 button .f.b2 -text "Pace vs. Heartrate" -command "SwapHr" 
 pack .f.b .f.b1 .f.b2 -side left -fill x
 
-# .pnd add .g
 .pnd add .myLabel
+.pnd add .t
 pack .f .pnd -fill both -expand 1
 wm deiconify .
 
