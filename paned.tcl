@@ -117,9 +117,58 @@ proc MakeGraph {units} {
             -tickfont "lucidasans -12" \
             -hide no 
     Blt_ZoomStack .g
-#Blt_Crosshairs .g
-#    Blt_ActiveLegend .g
-#Blt_ClosestPoint .g
+}
+
+
+# Create the graph widget.
+proc MakeGraph2 {units} {
+    graph .g2
+    .g2 element create line1 -x dist -y pace -label "Pace"
+    .g2 element create line2 -x dist -y heartrate -label "Heartrate" -mapy y2
+
+    .g2 element configure line1 \
+        -color blue4 \
+        -symbol circle \
+        -fill blue1 \
+        -pixels 0.04i \
+        -smooth quadratic
+
+    .g2 element configure line2 \
+        -color purple4 \
+        -symbol square \
+        -fill purple1 \
+        -pixels 0.04i \
+        -smooth quadratic
+
+     if {$units == "metric"} {
+         set xtitle "Distance (km)"
+         set ytitle "Pace (min/km)"
+         set y2title "Heartrate (bpm)"
+     } else {
+         set xtitle "Distance (mi)"
+         set ytitle "Pace (min/mi)"
+         set y2title "Heartrate (bpm)"
+     }
+
+    .g2 axis configure x \
+            -title $xtitle \
+            -rotate 0 \
+            -titlefont "lucidasans -12" \
+            -tickfont "lucidasans -12" 
+    .g2 axis configure y \
+            -title $ytitle \
+            -titlefont "lucidasans -12" \
+            -descending "1" \
+            -tickfont "lucidasans -12" \
+            -stepsize 15 \
+            -subdivisions 2 \
+            -command FormatYLabel 
+    .g2 axis configure y2 \
+            -title $y2title \
+            -titlefont "lucidasans -12" \
+            -tickfont "lucidasans -12" \
+            -hide no 
+    Blt_ZoomStack .g2
 }
 
 proc FormatYLabel {widget y} {
@@ -187,18 +236,33 @@ proc Update {units} {
 # Initialize data and GUI.
 label .myLabel
 PopulateVectors $unitsystem
-MakeGraph $unitsystem
+MakeGraph  $unitsystem
+MakeGraph2 $unitsystem
 MakeMap
 
 # Bind a motion event to the procedure that generates
 # a marker for the points on the graph.
 bind mytag <Motion>  { doFindElement %W %x %y }
 blt::AddBindTag .g mytag
+blt::AddBindTag .g2 mytag
+
+proc SwapAlt {} {
+   catch {.pnd forget .g2 }
+  .pnd add .g  
+}
+
+proc SwapHr {} {
+   catch {.pnd forget .g }
+  .pnd add .g2  
+}
+
 
 # And display!
 # Add both widgets to the paned window.
 .pnd add [button .b -text "Load File..." -command "Update $unitsystem"]
-.pnd add .g
+.pnd add [button .b1 -text "Pace vs. Altitude" -command  "SwapAlt" ]
+.pnd add [button .b2 -text "Pace vs. Heartrate" -command "SwapHr" ]
+# .pnd add .g
 .pnd add .myLabel
 pack .pnd -fill both -expand 1
 wm deiconify .
