@@ -260,12 +260,12 @@ proc SwapHr {} {
 # And display!
 # Add both widgets to the paned window.
 frame .f -relief ridge
-pack .f -side top -fill both
+pack .f -side top -fill x
 
 button .f.b -text "Load File..." -command "Update $unitsystem"
 button .f.b1 -text "Pace vs. Altitude" -command  "SwapAlt" 
 button .f.b2 -text "Pace vs. Heartrate" -command "SwapHr" 
-pack .f.b .f.b1 .f.b2 -side left -fill both
+pack .f.b .f.b1 .f.b2 -side left -fill x
 
 # .pnd add .g
 .pnd add .myLabel
