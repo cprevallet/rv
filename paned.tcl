@@ -66,7 +66,7 @@ proc PopulateVectors {units} {
 
 # Create a paned window object. Must be done before creating
 # objects to add into it. Why????
-panedwindow .pnd -orient v -opaqueresize 0
+panedwindow .pnd -orient h -opaqueresize 0
 
 # Create the graph widget.
 proc MakeGraph {units} {
@@ -255,16 +255,21 @@ proc SwapHr {} {
    catch {.pnd forget .g }
   .pnd add .g2  
 }
-
+ 
 
 # And display!
 # Add both widgets to the paned window.
-.pnd add [button .b -text "Load File..." -command "Update $unitsystem"]
-.pnd add [button .b1 -text "Pace vs. Altitude" -command  "SwapAlt" ]
-.pnd add [button .b2 -text "Pace vs. Heartrate" -command "SwapHr" ]
+frame .f -relief ridge
+pack .f -side top -fill both
+
+button .f.b -text "Load File..." -command "Update $unitsystem"
+button .f.b1 -text "Pace vs. Altitude" -command  "SwapAlt" 
+button .f.b2 -text "Pace vs. Heartrate" -command "SwapHr" 
+pack .f.b .f.b1 .f.b2 -side left -fill both
+
 # .pnd add .g
 .pnd add .myLabel
-pack .pnd -fill both -expand 1
+pack .f .pnd -fill both -expand 1
 wm deiconify .
 
 # File cleanup.
