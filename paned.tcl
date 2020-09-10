@@ -179,6 +179,7 @@ proc Update {units} {
     pace set {}
     altitude set {}
     cadence set {}
+    heartrate set {}
     PopulateVectors $units
     MakeMap
 }
