@@ -272,7 +272,13 @@ proc Update {units} {
 
 # Initialize data and GUI.
 label .myLabel
-tablelist::tablelist .t -columns {0 "Distance" 0 "Time" 0 "Calories"} -stretch all -background white
+    if {$unitsystem == "metric"} {
+    set distanceheader { 0 "Distance(km)"}
+    } else {
+    set distanceheader { 0 "Distance(mile)"}
+    }
+set ch [concat $distanceheader {0 "Time(min:sec)" 0 "Calories(kcal)"}]
+tablelist::tablelist .t -columns $ch -stretch all -background white
 PopulateVectors $unitsystem
 MakeGraph  $unitsystem
 MakeGraph2 $unitsystem
