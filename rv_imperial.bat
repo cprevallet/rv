@@ -1,1 +1,1 @@
-START /MIN CMD.EXE /C GO.BAT imperial
+START /MIN CMD.EXE /C GORV.BAT imperial
