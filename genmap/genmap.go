@@ -14,6 +14,11 @@ import (
   "strconv"
 )
 
+func IsFloat(s string) bool {
+    // Does the string contain a float number?
+    _, err := strconv.ParseFloat(s, 64) 
+    return err == nil
+}
 
 func readInputs(filename string, filepath string) ([]s2.LatLng) {
     csvFile, _ := os.Open(filepath + string(os.PathSeparator) + filename)
@@ -26,7 +31,7 @@ func readInputs(filename string, filepath string) ([]s2.LatLng) {
         } else if error != nil {
             panic(error)
         }
-        if (line[0] == "Distance(m)") { continue }  //skip the header
+        if !IsFloat(line[0]) { continue }  //skip the header
         badrec := 0
         for _, item := range line {
             if (item == "NaN" || item == "Invalid") {badrec = 1}
