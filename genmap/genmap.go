@@ -27,7 +27,11 @@ func readInputs(filename string, filepath string) ([]s2.LatLng) {
             panic(error)
         }
         if (line[0] == "Distance(m)") { continue }  //skip the header
-        if (line[3] != "Invalid") && (line[4] != "Invalid") {
+        badrec := 0
+        for _, item := range line {
+            if (item == "NaN" || item == "Invalid") {badrec = 1}
+        }
+        if (badrec == 0) {
             lat, err := strconv.ParseFloat(line[3], 64)
             if err != nil {panic(err)}
             lng, err := strconv.ParseFloat(line[4], 64)

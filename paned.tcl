@@ -52,18 +52,25 @@ proc PopulateVectors {units} {
             continue 
         }
         set data [csv::split $line ","]
-        if {$units == "metric"} {
-            dist append [units::convert [concat [lindex $data 0] "meters"] "kilometers"]
-            pace append [units::convert [concat [makePace [lindex $data 1]] "seconds/meter"] "seconds/kilometer"]
-            altitude append [units::convert [concat [lindex $data 5] "meters"] "meters"]
-            cadence append [lindex $data 6]
-            heartrate append [lindex $data 7]
-        } else {
-            dist append [units::convert [concat [lindex $data 0] "meters"] "miles"]
-            pace append [units::convert [concat [makePace [lindex $data 1]] "seconds/meter"] "seconds/mile"]
-            altitude append [units::convert [concat [lindex $data 5] "meters"] "foot"]
-            cadence append [lindex $data 6]
-            heartrate append [lindex $data 7]
+        # Check for bad data in the list (NaN or Invalid).
+        set badRec 0
+        for {set i 0} {$i < [llength data]} {incr i} {
+            if {(([lindex $data $i] == "NaN") || ([lindex $data $i] == "Invalid"))} {set badRec 1}
+        }
+        if {$badRec == 0} then {
+            if {$units == "metric"} {
+                dist append [units::convert [concat [lindex $data 0] "meters"] "kilometers"]
+                pace append [units::convert [concat [makePace [lindex $data 1]] "seconds/meter"] "seconds/kilometer"]
+                altitude append [units::convert [concat [lindex $data 5] "meters"] "meters"]
+                cadence append [lindex $data 6]
+                heartrate append [lindex $data 7]
+            } else {
+                dist append [units::convert [concat [lindex $data 0] "meters"] "miles"]
+                pace append [units::convert [concat [makePace [lindex $data 1]] "seconds/meter"] "seconds/mile"]
+                altitude append [units::convert [concat [lindex $data 5] "meters"] "foot"]
+                cadence append [lindex $data 6]
+                heartrate append [lindex $data 7]
+            }
         }
     }
 
@@ -90,15 +97,20 @@ proc MakeTable {units t} {
             continue 
         }
         set data [csv::split $line ","]    
-        set c3 [format %7.0f [lindex $data 6]]
-
-        set c2 [FormatYLabel .g [expr int([lindex $data 5]) ]]
-        if {$units == "metric"} {
-                set c1 [format %5.2f [units::convert [concat [lindex $data 4] "meters"] "kilometers"]]
-        } else {
-                set c1 [format %5.2f [units::convert [concat [lindex $data 4] "meters"] "miles"] ]
+        set badRec 0
+        for {set i 0} {$i < [llength data]} {incr i} {
+            if {(([lindex $data $i] == "NaN") || ([lindex $data $i] == "Invalid"))} {set badRec 1}
         }
-        $t insert end [list $c1 $c2 $c3]
+        if {$badRec == 0 } then {
+            set c2 [FormatYLabel .g [expr int([lindex $data 5]) ]]
+            set c3 [format %7.0f [lindex $data 6]]
+            if {$units == "metric"} {
+                    set c1 [format %5.2f [units::convert [concat [lindex $data 4] "meters"] "kilometers"]]
+            } else {
+                    set c1 [format %5.2f [units::convert [concat [lindex $data 4] "meters"] "miles"] ]
+            }
+            $t insert end [list $c1 $c2 $c3]
+        }
     }
 }
 
