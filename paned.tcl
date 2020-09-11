@@ -13,6 +13,9 @@ source prepare_packages.tcl
 # argv0 = metric or imperial (blank=imperial)
 set unitsystem [lindex $argv 0]
 
+# update the window title
+wm title . [concat rv ($unitsystem unitsystem)]
+
 # Create the line vectors and fill them in from the csv file.
 vector create dist
 vector create pace
@@ -37,7 +40,9 @@ proc PopulateVectors {units} {
     # in a (OS-specific) temp directory.
     source getfile.tcl
     set tempdir [ ::fileutil::tempdir ]
-    createCsv [ GetFitFile ] csv.dat $tempdir
+    set fitfilename [GetFitFile]
+    wm title . [concat rv ($units unitsystem) - $fitfilename]
+    createCsv $fitfilename csv.dat $tempdir
 
     # Read in the activity csv file.
     set f [open ${tempdir}[file separator]csv.dat r]
