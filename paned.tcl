@@ -86,6 +86,7 @@ proc MakeTable {units t} {
     # Read in the lap csv file.
     set tempdir [ ::fileutil::tempdir ]
     set f [open ${tempdir}[file separator]csv_lap.dat r]
+    set lap 0
     while {1} {
         set line [gets $f]
         if {[eof $f]} {
@@ -96,12 +97,13 @@ proc MakeTable {units t} {
         if {[string is alpha [string index $line 0]] == "1"} { 
             continue 
         }
-        set data [csv::split $line ","]    
+        set data [csv::split $line ","] 
         set badRec 0
         for {set i 0} {$i < [llength $data]} {incr i} {
             if {[lindex $data $i] == "NaN" || [lindex $data $i] == "Invalid"} {set badRec 1}
         }
         if {$badRec < 1 } then {
+            set lap [expr $lap + 1]
             set c2 [FormatYLabel .g [expr int([lindex $data 5]) ]]
             set c3 [format %7.0f [lindex $data 6]]
             if {$units == "metric"} {
@@ -109,7 +111,7 @@ proc MakeTable {units t} {
             } else {
                     set c1 [format %5.2f [units::convert [concat [lindex $data 4] "meters"] "miles"] ]
             }
-            $t insert end [list $c1 $c2 $c3]
+            $t insert end [list $lap $c1 $c2 $c3]
         }
     }
 }
@@ -290,7 +292,7 @@ label .myLabel
     } else {
     set distanceheader { 0 "Distance(mile)"}
     }
-set ch [concat $distanceheader {0 "Time(min:sec)" 0 "Calories(kcal)"}]
+set ch [concat {0 "Lap"} $distanceheader {0 "Time(min:sec)" 0 "Calories(kcal)"}]
 tablelist::tablelist .t -columns $ch -stretch all -background white
 PopulateVectors $unitsystem
 MakeGraph  $unitsystem
