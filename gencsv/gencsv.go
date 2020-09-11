@@ -8,13 +8,13 @@ import (
         "bytes"
 	"encoding/csv"
 	"fmt"
-        "github.com/cprevallet/rv/strutil"
-	"github.com/tormoder/fit"
 	"io/ioutil"
         "path/filepath"
 	"os"
         "strconv"
         "strings"
+        "github.com/cprevallet/rv/strutil"
+	"github.com/tormoder/fit"
 )
 
 var minPace = 0.56
