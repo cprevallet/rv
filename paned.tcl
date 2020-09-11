@@ -54,10 +54,10 @@ proc PopulateVectors {units} {
         set data [csv::split $line ","]
         # Check for bad data in the list (NaN or Invalid).
         set badRec 0
-        for {set i 0} {$i < [llength data]} {incr i} {
-            if {(([lindex $data $i] == "NaN") || ([lindex $data $i] == "Invalid"))} {set badRec 1}
+        for {set i 0} {$i < [llength $data]} {incr i} {
+            if {[lindex $data $i] == "NaN" || [lindex $data $i] == "Invalid"} {set badRec 1}
         }
-        if {$badRec == 0} then {
+        if {$badRec < 1} then {
             if {$units == "metric"} {
                 dist append [units::convert [concat [lindex $data 0] "meters"] "kilometers"]
                 pace append [units::convert [concat [makePace [lindex $data 1]] "seconds/meter"] "seconds/kilometer"]
@@ -98,10 +98,10 @@ proc MakeTable {units t} {
         }
         set data [csv::split $line ","]    
         set badRec 0
-        for {set i 0} {$i < [llength data]} {incr i} {
-            if {(([lindex $data $i] == "NaN") || ([lindex $data $i] == "Invalid"))} {set badRec 1}
+        for {set i 0} {$i < [llength $data]} {incr i} {
+            if {[lindex $data $i] == "NaN" || [lindex $data $i] == "Invalid"} {set badRec 1}
         }
-        if {$badRec == 0 } then {
+        if {$badRec < 1 } then {
             set c2 [FormatYLabel .g [expr int([lindex $data 5]) ]]
             set c3 [format %7.0f [lindex $data 6]]
             if {$units == "metric"} {
@@ -270,6 +270,7 @@ proc MakeMap {} {
 
 # Handle loading a new file.
 proc Update {units} {
+    file delete  [ ::fileutil::tempdir ][file separator]csv.dat
     #clear out the old data first
     .t delete 0 last
     dist set {}
