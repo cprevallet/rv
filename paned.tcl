@@ -16,16 +16,16 @@ set unitsystem [lindex $argv 0]
 # update the window title
 wm title . [concat rv ($unitsystem unitsystem)]
 
-# Colors - Dark mode (Linux)
-set bgcolor #333333
-set fgcolor #cccccc
-set accentcolor #2a2a2a
-set accenttextcolor #cccccc
 # Colors - Light mode (Linux)
 set bgcolor #ffffff
 set fgcolor #333333
 set accentcolor #e0dbd7
 set accenttextcolor #333333
+# Colors - Dark mode (Linux)
+set bgcolor #333333
+set fgcolor #cccccc
+set accentcolor #2a2a2a
+set accenttextcolor #cccccc
 
 # Create the line vectors and fill them in from the csv file.
 vector create dist
