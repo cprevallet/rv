@@ -16,6 +16,12 @@ set unitsystem [lindex $argv 0]
 # update the window title
 wm title . [concat rv ($unitsystem unitsystem)]
 
+# Colors
+set bgcolor #333333
+set fgcolor #cccccc
+set accentcolor #2a2a2a
+set accenttextcolor #cccccc
+
 # Create the line vectors and fill them in from the csv file.
 vector create dist
 vector create pace
@@ -87,7 +93,6 @@ panedwindow .pnd -orient h -opaqueresize 0
 
 # Create the table widget.
 proc MakeLapTable {units t} {
-
     # Read in the lap csv file.
     set tempdir [ ::fileutil::tempdir ]
     set f [open ${tempdir}[file separator]csv_lap.dat r]
@@ -167,9 +172,12 @@ proc MakeSessionTable {units t} {
 
 # Create the graph widget.
 proc MakeGraph {units} {
-    graph .g
-    .g element create line1 -x dist -y pace -label "Pace"
+    variable bgcolor
+    variable fgcolor
+    graph .g -background $bgcolor -highlightthickness 0
+    .g element create line1 -x dist -y pace -label "Pace" 
     .g element create line2 -x dist -y altitude -label "Altitude" -mapy y2
+    .g legend configure -foreground $fgcolor
 
     .g element configure line1 \
         -color blue4 \
@@ -199,29 +207,38 @@ proc MakeGraph {units} {
             -title $xtitle \
             -rotate 0 \
             -titlefont "lucidasans -12" \
-            -tickfont "lucidasans -12" 
+            -titlecolor $fgcolor \
+            -tickfont "lucidasans -12" \
+            -foreground $fgcolor
     .g axis configure y \
             -title $ytitle \
             -titlefont "lucidasans -12" \
+            -titlecolor $fgcolor \
             -descending "1" \
             -tickfont "lucidasans -12" \
             -stepsize 15 \
             -subdivisions 2 \
-            -command FormatYLabel 
+            -command FormatYLabel \
+            -foreground $fgcolor
     .g axis configure y2 \
             -title $y2title \
             -titlefont "lucidasans -12" \
+            -titlecolor $fgcolor \
             -tickfont "lucidasans -12" \
-            -hide no 
+            -hide no \
+            -foreground $fgcolor
     Blt_ZoomStack .g
 }
 
 
 # Create the graph widget.
 proc MakeGraph2 {units} {
-    graph .g2
+    variable bgcolor
+    variable fgcolor
+    graph .g2 -background $bgcolor -highlightthickness 0
     .g2 element create line1 -x dist -y pace -label "Pace"
     .g2 element create line2 -x dist -y heartrate -label "Heartrate" -mapy y2
+    .g2 legend configure -foreground $fgcolor
 
     .g2 element configure line1 \
         -color blue4 \
@@ -251,20 +268,26 @@ proc MakeGraph2 {units} {
             -title $xtitle \
             -rotate 0 \
             -titlefont "lucidasans -12" \
-            -tickfont "lucidasans -12" 
+            -tickfont "lucidasans -12" \
+            -titlecolor $fgcolor \
+            -foreground $fgcolor
     .g2 axis configure y \
             -title $ytitle \
             -titlefont "lucidasans -12" \
+            -titlecolor $fgcolor \
             -descending "1" \
             -tickfont "lucidasans -12" \
             -stepsize 15 \
             -subdivisions 2 \
-            -command FormatYLabel 
+            -command FormatYLabel \
+            -foreground $fgcolor
     .g2 axis configure y2 \
             -title $y2title \
             -titlefont "lucidasans -12" \
             -tickfont "lucidasans -12" \
-            -hide no 
+            -titlecolor $fgcolor \
+            -hide no \
+            -foreground $fgcolor
     Blt_ZoomStack .g2
 }
 
@@ -337,15 +360,18 @@ proc Update {units} {
 }
 
 # Initialize data and GUI.
-label .theMap
-    if {$unitsystem == "metric"} {
+label .theMap -background $bgcolor -foreground $fgcolor -highlightthickness 0 -borderwidth 0
+if {$unitsystem == "metric"} {
     set distanceheader { 0 "Distance(km)"}
-    } else {
+} else {
     set distanceheader { 0 "Distance(mile)"}
-    }
+}
 set ch [concat {0 "Lap"} $distanceheader {0 "Time(min:sec)" 0 "Calories(kcal)"}]
-tablelist::tablelist .t -columns $ch -stretch all -background white
-tablelist::tablelist .t2 -columns {0 "Attribute" 0 "Value"} -stretch all -background white
+tablelist::tablelist .t -columns $ch -stretch all -background $bgcolor -foreground $fgcolor -labelbackground $accentcolor -labelforeground $accenttextcolor -highlightthickness 0
+
+tablelist::tablelist .t2 -columns {0 "Attribute" 0 "Value"} -stretch all  -background $bgcolor -foreground $fgcolor -labelbackground $accentcolor  -labelforeground $accenttextcolor -highlightthickness 0
+
+
 PopulateVectors $unitsystem
 MakeGraph  $unitsystem
 MakeGraph2 $unitsystem
@@ -372,12 +398,14 @@ proc SwapHr {} {
 
 # And display!
 # Add both widgets to the paned window.
-frame .f -relief ridge
+frame .f -relief ridge -background $bgcolor -highlightthickness 0
 pack .f -side top -fill x
 
-button .f.b -text "Load File..." -command "Update $unitsystem"
-button .f.b1 -text "Pace vs. Altitude" -command  "SwapAlt" 
-button .f.b2 -text "Pace vs. Heartrate" -command "SwapHr" 
+button .f.b -text "Load File..." -command "Update $unitsystem" -background $bgcolor -foreground $fgcolor -highlightthickness 0
+button .f.b1 -text "Pace vs. Altitude" -command  "SwapAlt"  -background $bgcolor -foreground $fgcolor -highlightthickness 0
+button .f.b2 -text "Pace vs. Heartrate" -command "SwapHr" -background $bgcolor -foreground $fgcolor -highlightthickness 0
+
+
 pack .f.b .f.b1 .f.b2 -side left -fill x
 
 pack .f .t2 .t -side top -fill x
