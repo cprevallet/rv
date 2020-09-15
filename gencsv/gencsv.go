@@ -42,6 +42,10 @@ func convertActivityRecs(activityRecs []*fit.RecordMsg) ( dumprec[][]string ) {
                                    strutil.DecimalTimetoMinSec(makePace(record.GetSpeedScaled()) * paceToMetric),
                                    record.PositionLat.String(),
                                    record.PositionLong.String(),
+                                   //TODO: Garmin does "elevation correction" for devices w/o a barometer.
+                                   //  This is a lookup based on "professional surveys" e.g. likely based on
+                                   // latitude and longitude. Details: https://support.garmin.com/en-US/?faq=R4I5hFFcUk8gJPC4zi0Xv6
+                                   // Consider emulating with this api: https://github.com/Jorl17/open-elevation/blob/master/docs/api.md
                                    strconv.FormatFloat(record.GetAltitudeScaled(), 'G', -1, 64),
                                    strconv.Itoa(int(record.Cadence)),
                                    strconv.Itoa(int(record.HeartRate)),
