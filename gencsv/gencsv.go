@@ -13,6 +13,7 @@ import (
 	"os"
         "strconv"
         "strings"
+        "time"
         "github.com/cprevallet/rv/strutil"
 	"github.com/tormoder/fit"
 )
@@ -67,6 +68,29 @@ func convertSegmentRecs(segmentRecs []*fit.LapMsg) ( dumprec[][]string ) {
                 dumprec = append(dumprec, newrec)
                 }
 		return dumprec
+	}
+
+// Convert a session structure.
+func convertSessionRecs(sessionRecs []*fit.SessionMsg) ( dumprec[][]string ) {
+        // TODO: There should be only one session record per file, right?
+        record := sessionRecs[0]
+        dumprec = append(dumprec, []string{"Start Time", record.StartTime.Format(time.UnixDate)})
+        dumprec = append(dumprec, []string{"End Time", record.Timestamp.Format(time.UnixDate)})
+        dumprec = append(dumprec, []string{"Elapsed Time", strconv.FormatFloat(record.GetTotalElapsedTimeScaled(), 'G', -1, 64)})
+        dumprec = append(dumprec, []string{"Active Time", strconv.FormatFloat(record.GetTotalTimerTimeScaled(), 'G', -1, 64)})
+        dumprec = append(dumprec, []string{"Total Distance", strconv.FormatFloat(record.GetTotalDistanceScaled(), 'G', -1, 64)})
+        dumprec = append(dumprec, []string{"Total Calories", strconv.Itoa(int(record.TotalCalories))})
+        dumprec = append(dumprec, []string{"Average Pace", strconv.FormatFloat( makePace(record.GetAvgSpeedScaled()) , 'G', -1, 64)})
+        dumprec = append(dumprec, []string{"Fastest Pace", strconv.FormatFloat( makePace(record.GetMaxSpeedScaled()) , 'G', -1, 64)})
+        if record.AvgHeartRate < 255 {
+            dumprec = append(dumprec, []string{"Average Heart Rate", strconv.Itoa(int(record.AvgHeartRate))})
+            dumprec = append(dumprec, []string{"Maximum Heart Rate", strconv.Itoa(int(record.MaxHeartRate))})
+        }
+        dumprec = append(dumprec, []string{"Max Cadence", strconv.Itoa(int(record.MaxCadence))})
+        dumprec = append(dumprec, []string{"Average Cadence", strconv.Itoa(int(record.AvgCadence))})
+        dumprec = append(dumprec, []string{"Total Ascent", strconv.Itoa(int(record.TotalAscent))})
+        dumprec = append(dumprec, []string{"Total Descent", strconv.Itoa(int(record.TotalDescent))})
+        return dumprec
 	}
 
 // Entry point for cgo
@@ -147,6 +171,23 @@ func CreateCSV(fit_filename string, csv_filename string, csv_path string) {
 		panic(err)
 	}
         lapfile.Close()
+
+        sessionfile, err4 := os.Create(csv_path + string(os.PathSeparator) + fname + "_session" + filepath.Ext(csv_filename)) // For write access.
+	if err4 != nil {
+		panic("Can't open output file. Aborting.")
+	}
+
+        // Generate the lap csv file.
+        w = csv.NewWriter(sessionfile)
+        wRecs = [][]string{}
+        sessionRecs := convertSessionRecs(activity.Sessions)
+	for _, record := range sessionRecs {wRecs = append(wRecs, record)}
+	w.WriteAll(wRecs)
+	if err := w.Error(); err != nil {
+		panic(err)
+	}
+        sessionfile.Close()
+
 
         infile.Close()
 }

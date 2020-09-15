@@ -86,7 +86,7 @@ proc PopulateVectors {units} {
 panedwindow .pnd -orient h -opaqueresize 0
 
 # Create the table widget.
-proc MakeTable {units t} {
+proc MakeLapTable {units t} {
 
     # Read in the lap csv file.
     set tempdir [ ::fileutil::tempdir ]
@@ -120,6 +120,50 @@ proc MakeTable {units t} {
         }
     }
 }
+
+# Create another table widget.
+proc MakeSessionTable {units t} {
+    # Read in the lap csv file.
+    set tempdir [ ::fileutil::tempdir ]
+    set f [open ${tempdir}[file separator]csv_session.dat r]
+
+    while {1} {
+        set line [gets $f]
+        if {[eof $f]} {
+            close $f
+            break
+        }
+        set data [csv::split $line ","]
+        set c0 [lindex $data 0]
+        set c1 [lindex $data 1]
+        # Times to hh:mm:ss
+        if {$c0 == "Elapsed Time" || $c0 == "Active Time"} {
+            set c1 [clock format [expr int([lindex $data 1])] -gmt 1 -format "%H:%M:%S"]
+        }
+        if {$c0 == "Total Distance" && $units == "metric"} {
+            set c1 [format %5.2f [units::convert [concat [lindex $data 1] "meters"] "kilometers"]]
+        }
+        if {$c0 == "Total Distance" && $units != "metric"} {
+            set c1 [format %5.2f [units::convert [concat [lindex $data 1] "meters"] "miles"]]
+        }
+        if {($c0 == "Average Pace" || $c0 == "Fastest Pace") && $units == "metric"} {
+            set pace [format %5.2f [units::convert [concat [lindex $data 1] "seconds/meter"] "seconds/kilometer"]]
+            set c1 [clock format [expr int($pace)] -format "%M:%S"]
+        }
+        if {($c0 == "Average Pace" || $c0 == "Fastest Pace") && $units != "metric"} {
+            set pace [format %5.2f [units::convert [concat [lindex $data 1] "seconds/meter"] "seconds/mile"]]
+            set c1 [clock format [expr int($pace)] -format "%M:%S"]
+        }
+        if {($c0 == "Total Ascent" || $c0 == "Total Descent") && $units == "metric"} {
+            set c1 [format %5.0f [units::convert [concat [lindex $data 1] "meters"] "meters"]]
+        }
+        if {($c0 == "Total Ascent" || $c0 == "Total Descent") && $units != "metric"} {
+            set c1 [format %5.0f [units::convert [concat [lindex $data 1] "meters"] "foot"]]
+        }
+        $t insert end [list $c0 $c1]
+    }
+}
+
 
 # Create the graph widget.
 proc MakeGraph {units} {
@@ -272,7 +316,7 @@ proc MakeMap {} {
     # Call goroutine to create png
     createImg csv.dat [ ::fileutil::tempdir ]
     image create photo imgobj -file "image.png"
-    .myLabel configure -image imgobj
+    .theMap configure -image imgobj
 }
 
 # Handle loading a new file.
@@ -280,18 +324,20 @@ proc Update {units} {
     file delete  [ ::fileutil::tempdir ][file separator]csv.dat
     #clear out the old data first
     .t delete 0 last
+    .t2 delete 0 last
     dist set {}
     pace set {}
     altitude set {}
     cadence set {}
     heartrate set {}
     PopulateVectors $units
-    MakeTable $units .t
+    MakeLapTable $units .t
+    MakeSessionTable $units .t2
     MakeMap
 }
 
 # Initialize data and GUI.
-label .myLabel
+label .theMap
     if {$unitsystem == "metric"} {
     set distanceheader { 0 "Distance(km)"}
     } else {
@@ -299,10 +345,12 @@ label .myLabel
     }
 set ch [concat {0 "Lap"} $distanceheader {0 "Time(min:sec)" 0 "Calories(kcal)"}]
 tablelist::tablelist .t -columns $ch -stretch all -background white
+tablelist::tablelist .t2 -columns {0 "Attribute" 0 "Value"} -stretch all -background white
 PopulateVectors $unitsystem
 MakeGraph  $unitsystem
 MakeGraph2 $unitsystem
-MakeTable $unitsystem .t
+MakeLapTable $unitsystem .t
+MakeSessionTable $unitsystem .t2
 MakeMap
 
 # Bind a motion event to the procedure that generates
@@ -332,9 +380,10 @@ button .f.b1 -text "Pace vs. Altitude" -command  "SwapAlt"
 button .f.b2 -text "Pace vs. Heartrate" -command "SwapHr" 
 pack .f.b .f.b1 .f.b2 -side left -fill x
 
-.pnd add .myLabel
-.pnd add .t
-pack .f .pnd -fill both -expand 1
+pack .f .t2 .t -side top -fill x
+
+.pnd add .theMap
+pack .pnd -fill both -expand 1
 wm deiconify .
 
 # File cleanup.
