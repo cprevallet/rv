@@ -88,13 +88,13 @@ proc PopulateVectors {units} {
                 dist append [units::convert [concat [lindex $data 0] "meters"] "kilometers"]
                 pace append [units::convert [concat [makePace [lindex $data 1]] "seconds/meter"] "seconds/kilometer"]
                 altitude append [units::convert [concat [lindex $data 5] "meters"] "meters"]
-                cadence append [lindex $data 6]
+                cadence append [expr [lindex $data 6] * 2.0]
                 heartrate append [lindex $data 7]
             } else {
                 dist append [units::convert [concat [lindex $data 0] "meters"] "miles"]
                 pace append [units::convert [concat [makePace [lindex $data 1]] "seconds/meter"] "seconds/mile"]
                 altitude append [units::convert [concat [lindex $data 5] "meters"] "foot"]
-                cadence append [lindex $data 6]
+                cadence append [expr [lindex $data 6] * 2.0]
                 heartrate append [lindex $data 7]
             }
         }
@@ -187,46 +187,36 @@ proc MakeSessionTable {units t} {
 }
 
 # Create the graph widget.
-proc MakeGraph {units} {
-    variable bgcolor
+proc MakeGraph1 {units} {
     variable fgcolor
-    graph .g -background $bgcolor -highlightthickness 0
-    .g element create line1 -x dist -y pace -label "Pace" 
-    .g element create line2 -x dist -y altitude -label "Altitude" -mapy y2
-    .g legend configure -foreground $fgcolor
+    variable bgcolor
+    graph .g1 -background $bgcolor -highlightthickness 0
+    .g1 element create line1 -x dist -y pace -label "Pace" 
+    .g1 legend configure -foreground $fgcolor
 
-    .g element configure line1 \
+    .g1 element configure line1 \
         -color blue4 \
         -symbol circle \
         -fill blue1 \
         -pixels 0.04i \
         -smooth quadratic
 
-    .g element configure line2 \
-        -color purple4 \
-        -symbol square \
-        -fill purple1 \
-        -pixels 0.04i \
-        -smooth quadratic
-
      if {$units == "metric"} {
          set xtitle "Distance (km)"
          set ytitle "Pace (min/km)"
-         set y2title "Altitude (m)"
      } else {
          set xtitle "Distance (mi)"
          set ytitle "Pace (min/mi)"
-         set y2title "Altitude (feet)"
      }
 
-    .g axis configure x \
+    .g1 axis configure x \
             -title $xtitle \
             -rotate 0 \
             -titlefont "lucidasans -12" \
             -titlecolor $fgcolor \
             -tickfont "lucidasans -12" \
             -foreground $fgcolor
-    .g axis configure y \
+    .g1 axis configure y \
             -title $ytitle \
             -titlefont "lucidasans -12" \
             -titlecolor $fgcolor \
@@ -236,24 +226,15 @@ proc MakeGraph {units} {
             -subdivisions 2 \
             -command FormatYLabel \
             -foreground $fgcolor
-    .g axis configure y2 \
-            -title $y2title \
-            -titlefont "lucidasans -12" \
-            -titlecolor $fgcolor \
-            -tickfont "lucidasans -12" \
-            -hide no \
-            -foreground $fgcolor
-    Blt_ZoomStack .g
+    Blt_ZoomStack .g1
 }
-
 
 # Create the graph widget.
 proc MakeGraph2 {units} {
     variable bgcolor
     variable fgcolor
     graph .g2 -background $bgcolor -highlightthickness 0
-    .g2 element create line1 -x dist -y pace -label "Pace"
-    .g2 element create line2 -x dist -y heartrate -label "Heartrate" -mapy y2
+    .g2 element create line1 -x dist -y heartrate -label "Heartrate"
     .g2 legend configure -foreground $fgcolor
 
     .g2 element configure line1 \
@@ -263,21 +244,12 @@ proc MakeGraph2 {units} {
         -pixels 0.04i \
         -smooth quadratic
 
-    .g2 element configure line2 \
-        -color purple4 \
-        -symbol square \
-        -fill purple1 \
-        -pixels 0.04i \
-        -smooth quadratic
-
      if {$units == "metric"} {
          set xtitle "Distance (km)"
-         set ytitle "Pace (min/km)"
-         set y2title "Heartrate (bpm)"
+         set ytitle "Heartrate (bpm)"
      } else {
          set xtitle "Distance (mi)"
-         set ytitle "Pace (min/mi)"
-         set y2title "Heartrate (bpm)"
+         set ytitle "Heartrate (bpm)"
      }
 
     .g2 axis configure x \
@@ -290,22 +262,90 @@ proc MakeGraph2 {units} {
     .g2 axis configure y \
             -title $ytitle \
             -titlefont "lucidasans -12" \
-            -titlecolor $fgcolor \
-            -descending "1" \
-            -tickfont "lucidasans -12" \
-            -stepsize 15 \
-            -subdivisions 2 \
-            -command FormatYLabel \
-            -foreground $fgcolor
-    .g2 axis configure y2 \
-            -title $y2title \
-            -titlefont "lucidasans -12" \
             -tickfont "lucidasans -12" \
             -titlecolor $fgcolor \
-            -hide no \
             -foreground $fgcolor
     Blt_ZoomStack .g2
 }
+
+# create the graph widget.
+proc MakeGraph3 {units} {
+    variable bgcolor
+    variable fgcolor
+    graph .g3 -background $bgcolor -highlightthickness 0
+    .g3 element create line1 -x dist -y altitude -label "Altitude"
+    .g3 legend configure -foreground $fgcolor
+
+    .g3 element configure line1 \
+        -color blue4 \
+        -symbol circle \
+        -fill blue1 \
+        -pixels 0.04i \
+        -smooth quadratic
+
+     if {$units == "metric"} {
+         set xtitle "Distance (km)"
+         set ytitle "Altitude (m)"
+     } else {
+         set xtitle "Distance (mi)"
+         set ytitle "Altitude (feet)"
+     }
+
+    .g3 axis configure x \
+            -title $xtitle \
+            -rotate 0 \
+            -titlefont "lucidasans -12" \
+            -tickfont "lucidasans -12" \
+            -titlecolor $fgcolor \
+            -foreground $fgcolor
+    .g3 axis configure y \
+            -title $ytitle \
+            -titlefont "lucidasans -12" \
+            -tickfont "lucidasans -12" \
+            -titlecolor $fgcolor \
+            -foreground $fgcolor
+    Blt_ZoomStack .g3
+}
+
+# create the graph widget.
+proc MakeGraph4 {units} {
+    variable bgcolor
+    variable fgcolor
+    graph .g4 -background $bgcolor -highlightthickness 0
+    .g4 element create line1 -x dist -y cadence -label "Cadence"
+    .g4 legend configure -foreground $fgcolor
+
+    .g4 element configure line1 \
+        -color blue4 \
+        -symbol circle \
+        -fill blue1 \
+        -pixels 0.04i \
+        -smooth quadratic
+
+     if {$units == "metric"} {
+         set xtitle "Distance (km)"
+         set ytitle "Cadence (spm)"
+     } else {
+         set xtitle "Distance (mi)"
+         set ytitle "Cadence (spm)"
+     }
+
+    .g4 axis configure x \
+            -title $xtitle \
+            -rotate 0 \
+            -titlefont "lucidasans -12" \
+            -tickfont "lucidasans -12" \
+            -titlecolor $fgcolor \
+            -foreground $fgcolor
+    .g4 axis configure y \
+            -title $ytitle \
+            -titlefont "lucidasans -12" \
+            -tickfont "lucidasans -12" \
+            -titlecolor $fgcolor \
+            -foreground $fgcolor
+    Blt_ZoomStack .g4
+}
+
 
 proc FormatYLabel {widget y} {
     if {$y > 1} {
@@ -386,8 +426,10 @@ set colh [concat {0 "Lap"} $distanceheader {0 "Time(min:sec)" 0 "Calories(kcal)"
 tablelist::tablelist .t -columns $colh -stretch all
 tablelist::tablelist .t2 -columns {0 "Attribute" 0 "Value"} -stretch all
 PopulateVectors $unitsystem
-MakeGraph  $unitsystem
+MakeGraph1 $unitsystem
 MakeGraph2 $unitsystem
+MakeGraph3 $unitsystem
+MakeGraph4 $unitsystem
 MakeLapTable $unitsystem .t
 MakeSessionTable $unitsystem .t2
 MakeMap
@@ -395,17 +437,37 @@ MakeMap
 # Bind a motion event to the procedure that generates
 # a marker for the points on the graph.
 bind mytag <Motion>  { doFindElement %W %x %y }
-blt::AddBindTag .g mytag
+blt::AddBindTag .g1 mytag
 blt::AddBindTag .g2 mytag
+blt::AddBindTag .g3 mytag
+blt::AddBindTag .g4 mytag
 
-proc SwapAlt {} {
+proc SwapPace {} {
    catch {.pnd forget .g2 }
-  .pnd add .g  
+   catch {.pnd forget .g3 }
+   catch {.pnd forget .g4 }
+  .pnd add .g1
 }
 
 proc SwapHr {} {
-   catch {.pnd forget .g }
+   catch {.pnd forget .g1 }
+   catch {.pnd forget .g3 }
+   catch {.pnd forget .g4 }
   .pnd add .g2  
+}
+
+proc SwapAlt {} {
+   catch {.pnd forget .g1 }
+   catch {.pnd forget .g2 }
+   catch {.pnd forget .g4 }
+  .pnd add .g3 
+}
+
+proc SwapCadence {} {
+   catch {.pnd forget .g1 }
+   catch {.pnd forget .g2 }
+   catch {.pnd forget .g3 }
+  .pnd add .g4  
 }
  
 
@@ -415,9 +477,11 @@ ttk::frame .f -relief ridge
 pack .f -side top -fill x
 
 ttk::button .f.b -text "Load File..." -command "Update $unitsystem"
-ttk::button .f.b1 -text "Pace vs. Altitude" -command  "SwapAlt" 
-ttk::button .f.b2 -text "Pace vs. Heartrate" -command "SwapHr" 
-pack .f.b .f.b1 .f.b2 -side left -fill x
+ttk::button .f.b1 -text "Pace" -command  "SwapPace" 
+ttk::button .f.b2 -text "Heartrate" -command "SwapHr" 
+ttk::button .f.b3 -text "Altitude" -command "SwapAlt" 
+ttk::button .f.b4 -text "Cadence" -command "SwapCadence" 
+pack .f.b .f.b1 .f.b2 .f.b3 .f.b4 -side left -fill x
 
 pack .f .t2 .t -side top -fill x
 
