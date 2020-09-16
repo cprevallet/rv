@@ -195,9 +195,9 @@ proc MakeGraph1 {units} {
     .n.f1.g1 legend configure -foreground $fgcolor
 
     .n.f1.g1 element configure line1 \
-        -color blue4 \
+        -color #000000 \
         -symbol circle \
-        -fill blue1 \
+        -fill #9c6486 \
         -pixels 0.04i \
         -smooth quadratic
 
@@ -238,9 +238,9 @@ proc MakeGraph2 {units} {
     .n.f2.g2 legend configure -foreground $fgcolor
 
     .n.f2.g2 element configure line1 \
-        -color blue4 \
+        -color #000000 \
         -symbol circle \
-        -fill blue1 \
+        -fill #1f77b4 \
         -pixels 0.04i \
         -smooth quadratic
 
@@ -277,9 +277,9 @@ proc MakeGraph3 {units} {
     .n.f3.g3 legend configure -foreground $fgcolor
 
     .n.f3.g3 element configure line1 \
-        -color blue4 \
+        -color #000000 \
         -symbol circle \
-        -fill blue1 \
+        -fill #ff7f0e \
         -pixels 0.04i \
         -smooth quadratic
 
@@ -316,9 +316,9 @@ proc MakeGraph4 {units} {
     .n.f4.g4 legend configure -foreground $fgcolor
 
     .n.f4.g4 element configure line1 \
-        -color blue4 \
+        -color #000000 \
         -symbol circle \
-        -fill blue1 \
+        -fill #4daf4a \
         -pixels 0.04i \
         -smooth quadratic
 
