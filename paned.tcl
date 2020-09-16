@@ -437,8 +437,6 @@ pack .f -side top -fill x
 ttk::button .f.b -text "Load File..." -command "Update $unitsystem"
 pack .f.b  -side left -fill x
 
-# Add tables.
-pack .f .t2 .t -side top -fill x
 
 #Create a tabbed notebook.
 ttk::notebook .n
@@ -471,6 +469,9 @@ pack .n.f1.g1 .n.f2.g2 .n.f3.g3 .n.f4.g4 -side left -fill x -expand 1
 .pnd add .theMap
 .pnd add .n
 pack .pnd -fill both -expand 1
+
+# Add tables.
+pack .f .t2 .t -side top -fill x
 
 wm deiconify .
 
