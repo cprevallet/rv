@@ -2,9 +2,6 @@
 package require Tk
 # minimize the annoying Tk window (under Windows) on startup
 wm iconify .
-package require fileutil
-package require csv
-package require units
 
 # Load the dlls/shared object files and commonly used packages.
 source prepare_packages.tcl
@@ -15,6 +12,21 @@ set unitsystem [lindex $argv 0]
 
 # update the window title
 wm title . [concat rv ($unitsystem unitsystem)]
+
+# TODO:/maybe native styles for different platform and/or dark/light
+# built-ins
+# Linux = clam alt classic default
+# Windows = xpnative
+switch $tcl_platform(platform) {
+   windows {
+      set theme xpnative
+   }
+   unix {
+      set theme clam
+   }
+}
+tablelist::setTheme $theme
+ttk::style theme use $theme
 
 # Create the line vectors and fill them in from the csv file.
 vector create dist
@@ -337,15 +349,17 @@ proc Update {units} {
 }
 
 # Initialize data and GUI.
-label .theMap
+ttk::label .theMap
     if {$unitsystem == "metric"} {
     set distanceheader { 0 "Distance(km)"}
     } else {
     set distanceheader { 0 "Distance(mile)"}
     }
 set ch [concat {0 "Lap"} $distanceheader {0 "Time(min:sec)" 0 "Calories(kcal)"}]
-tablelist::tablelist .t -columns $ch -stretch all -background white
-tablelist::tablelist .t2 -columns {0 "Attribute" 0 "Value"} -stretch all -background white
+#tablelist::tablelist .t -columns $ch -stretch all -background white
+#tablelist::tablelist .t2 -columns {0 "Attribute" 0 "Value"} -stretch all -background white
+tablelist::tablelist .t -columns $ch -stretch all
+tablelist::tablelist .t2 -columns {0 "Attribute" 0 "Value"} -stretch all
 PopulateVectors $unitsystem
 MakeGraph  $unitsystem
 MakeGraph2 $unitsystem
@@ -372,12 +386,12 @@ proc SwapHr {} {
 
 # And display!
 # Add both widgets to the paned window.
-frame .f -relief ridge
+ttk::frame .f -relief ridge
 pack .f -side top -fill x
 
-button .f.b -text "Load File..." -command "Update $unitsystem"
-button .f.b1 -text "Pace vs. Altitude" -command  "SwapAlt" 
-button .f.b2 -text "Pace vs. Heartrate" -command "SwapHr" 
+ttk::button .f.b -text "Load File..." -command "Update $unitsystem"
+ttk::button .f.b1 -text "Pace vs. Altitude" -command  "SwapAlt" 
+ttk::button .f.b2 -text "Pace vs. Heartrate" -command "SwapHr" 
 pack .f.b .f.b1 .f.b2 -side left -fill x
 
 pack .f .t2 .t -side top -fill x

@@ -1,7 +1,7 @@
 # Identify and load the dependent packages in an OS specific manner.
 # Separate the boilerplate here so that it may be reused.
 package require fileutil
-package require tablelist
+package require tablelist_tile
 
 # Load the packages from appdlls directory
 set dllfilepath [ file join [pwd] appdlls ]
@@ -25,4 +25,8 @@ namespace import blt::*
 # functions written in GO.  sharedlibextension = dll (Windows) or
 # so (Linux)
 load [file join $dllfilepath goroutines[info sharedlibextension]]
+
+package require fileutil
+package require csv
+package require units
 
