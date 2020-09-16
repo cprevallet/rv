@@ -32,6 +32,10 @@ switch $tcl_platform(platform) {
 }
 tablelist::setTheme $theme
 ttk::style theme use $theme
+# The graph(s) does not support ttk themes, so we look up theme colors
+# so they match.
+set bgcolor [ttk::style lookup TButton -background]
+set fgcolor [ttk::style lookup TButton -foreground]
 
 # Create the line vectors and fill them in from the csv file.
 vector create dist
@@ -100,6 +104,7 @@ proc PopulateVectors {units} {
 
 # Create a paned window object. Must be done before creating
 # objects to add into it. Why????
+# ttk version apparently has a bug when resizing the sash or else we'd use it.
 panedwindow .pnd -orient h -opaqueresize 0
 
 # Create the table widget.
@@ -181,12 +186,14 @@ proc MakeSessionTable {units t} {
     }
 }
 
-
 # Create the graph widget.
 proc MakeGraph {units} {
-    graph .g
-    .g element create line1 -x dist -y pace -label "Pace"
+    variable bgcolor
+    variable fgcolor
+    graph .g -background $bgcolor -highlightthickness 0
+    .g element create line1 -x dist -y pace -label "Pace" 
     .g element create line2 -x dist -y altitude -label "Altitude" -mapy y2
+    .g legend configure -foreground $fgcolor
 
     .g element configure line1 \
         -color blue4 \
@@ -216,29 +223,38 @@ proc MakeGraph {units} {
             -title $xtitle \
             -rotate 0 \
             -titlefont "lucidasans -12" \
-            -tickfont "lucidasans -12" 
+            -titlecolor $fgcolor \
+            -tickfont "lucidasans -12" \
+            -foreground $fgcolor
     .g axis configure y \
             -title $ytitle \
             -titlefont "lucidasans -12" \
+            -titlecolor $fgcolor \
             -descending "1" \
             -tickfont "lucidasans -12" \
             -stepsize 15 \
             -subdivisions 2 \
-            -command FormatYLabel 
+            -command FormatYLabel \
+            -foreground $fgcolor
     .g axis configure y2 \
             -title $y2title \
             -titlefont "lucidasans -12" \
+            -titlecolor $fgcolor \
             -tickfont "lucidasans -12" \
-            -hide no 
+            -hide no \
+            -foreground $fgcolor
     Blt_ZoomStack .g
 }
 
 
 # Create the graph widget.
 proc MakeGraph2 {units} {
-    graph .g2
+    variable bgcolor
+    variable fgcolor
+    graph .g2 -background $bgcolor -highlightthickness 0
     .g2 element create line1 -x dist -y pace -label "Pace"
     .g2 element create line2 -x dist -y heartrate -label "Heartrate" -mapy y2
+    .g2 legend configure -foreground $fgcolor
 
     .g2 element configure line1 \
         -color blue4 \
@@ -268,20 +284,26 @@ proc MakeGraph2 {units} {
             -title $xtitle \
             -rotate 0 \
             -titlefont "lucidasans -12" \
-            -tickfont "lucidasans -12" 
+            -tickfont "lucidasans -12" \
+            -titlecolor $fgcolor \
+            -foreground $fgcolor
     .g2 axis configure y \
             -title $ytitle \
             -titlefont "lucidasans -12" \
+            -titlecolor $fgcolor \
             -descending "1" \
             -tickfont "lucidasans -12" \
             -stepsize 15 \
             -subdivisions 2 \
-            -command FormatYLabel 
+            -command FormatYLabel \
+            -foreground $fgcolor
     .g2 axis configure y2 \
             -title $y2title \
             -titlefont "lucidasans -12" \
             -tickfont "lucidasans -12" \
-            -hide no 
+            -titlecolor $fgcolor \
+            -hide no \
+            -foreground $fgcolor
     Blt_ZoomStack .g2
 }
 
@@ -360,10 +382,8 @@ ttk::label .theMap
     } else {
     set distanceheader { 0 "Distance(mile)"}
     }
-set ch [concat {0 "Lap"} $distanceheader {0 "Time(min:sec)" 0 "Calories(kcal)"}]
-#tablelist::tablelist .t -columns $ch -stretch all -background white
-#tablelist::tablelist .t2 -columns {0 "Attribute" 0 "Value"} -stretch all -background white
-tablelist::tablelist .t -columns $ch -stretch all
+set colh [concat {0 "Lap"} $distanceheader {0 "Time(min:sec)" 0 "Calories(kcal)"}]
+tablelist::tablelist .t -columns $colh -stretch all
 tablelist::tablelist .t2 -columns {0 "Attribute" 0 "Value"} -stretch all
 PopulateVectors $unitsystem
 MakeGraph  $unitsystem
