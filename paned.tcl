@@ -19,10 +19,15 @@ wm title . [concat rv ($unitsystem unitsystem)]
 # Windows = xpnative
 switch $tcl_platform(platform) {
    windows {
+      #set theme vista
+      #set theme winnative
       set theme xpnative
    }
    unix {
       set theme clam
+      #set theme alt
+      #set theme classic
+      #set theme default
    }
 }
 tablelist::setTheme $theme
