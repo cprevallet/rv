@@ -399,7 +399,7 @@ proc doFindElement { g x y } {
 }
 
 # Create the map on a label widget.
-proc MakeMap {} {
+proc MakeMap { m } {
     # Call goroutine to create png
     if [catch {createImg csv.dat [ ::fileutil::tempdir ]} result] {
         # error - probably no internet connection.
@@ -407,7 +407,7 @@ proc MakeMap {} {
         puts stderr "Warning: $result"
     } else {
         image create photo imgobj -file "image.png"
-        .theMap configure -image imgobj
+        $m configure -image imgobj
     }
 }
 
@@ -428,7 +428,7 @@ proc Update {units} {
         PopulateVectors $units
         MakeLapTable $units .t
         MakeSessionTable $units .t2
-        MakeMap
+        MakeMap .theMap
         }
 }
 
@@ -442,11 +442,6 @@ ttk::label .theMap
 set colh [concat {0 "Lap"} $distanceheader {0 "Time(min:sec)" 0 "Calories(kcal)"}]
 tablelist::tablelist .t -columns $colh -stretch all
 tablelist::tablelist .t2 -columns {0 "Attribute" 0 "Value"} -stretch all
-if {[ReadFile $unitsystem] == "1"} then {
-    PopulateVectors $unitsystem
-    MakeLapTable $unitsystem .t
-    MakeSessionTable $unitsystem .t2
-    MakeMap
 
 # Create the GUI.
 # Add frame and button.
@@ -467,6 +462,16 @@ if {[ReadFile $unitsystem] == "1"} then {
     .n add .n.f3 -text "Altitude"
     .n add .n.f4 -text "Cadence"
 
+# Add both widgets to the paned window.
+    .pnd add .theMap -width 800 -height 600
+    .pnd add .n
+    pack .pnd -fill both -expand 1
+
+# Add tables.
+    pack .f .t2 .t -side top -fill x
+
+    wm deiconify .
+
 # Create the graphs.
     MakeGraph1 $unitsystem
     MakeGraph2 $unitsystem
@@ -483,19 +488,5 @@ if {[ReadFile $unitsystem] == "1"} then {
 
     pack .n.f1.g1 .n.f2.g2 .n.f3.g3 .n.f4.g4 -side left -fill x -expand 1
 
-# Add both widgets to the paned window.
-    .pnd add .theMap
-    .pnd add .n
-    pack .pnd -fill both -expand 1
+Update $unitsystem
 
-# Add tables.
-    pack .f .t2 .t -side top -fill x
-
-    wm deiconify .
-
-# File cleanup.
-#file delete image.png
-    file delete  [ ::fileutil::tempdir ][file separator]csv.dat
-} else {
-    exit
-}
