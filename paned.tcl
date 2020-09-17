@@ -53,19 +53,27 @@ proc makePace {speed} {
     }
     return $pace
 }
- 
-# Read in the data from a csv file.
-proc PopulateVectors {units} {
+# Call the GO extension to convert the binary file to a csv file
+# in a (OS-specific) temp directory.
 
-    # Call the GO extension to convert the binary file to a csv file
-    # in a (OS-specific) temp directory.
+proc ReadFile {units} {
     source getfile.tcl
     set tempdir [ ::fileutil::tempdir ]
     set fitfilename [GetFitFile]
-    wm title . [concat rv ($units unitsystem) - $fitfilename]
-    createCsv $fitfilename csv.dat $tempdir
+    if {$fitfilename == ""} then {
+        return 0
+    } else {
+        wm title . [concat rv ($units unitsystem) - $fitfilename]
+        createCsv $fitfilename csv.dat $tempdir
+        return 1
+    }
+}
+
+# Read in the data from a csv file.
+proc PopulateVectors {units} {
 
     # Read in the activity csv file.
+    set tempdir [ ::fileutil::tempdir ]
     set f [open ${tempdir}[file separator]csv.dat r]
     while {1} {
         set line [gets $f]
@@ -401,18 +409,22 @@ proc MakeMap {} {
 # Handle loading a new file.
 proc Update {units} {
     file delete  [ ::fileutil::tempdir ][file separator]csv.dat
-    #clear out the old data first
-    .t delete 0 last
-    .t2 delete 0 last
-    dist set {}
-    pace set {}
-    altitude set {}
-    cadence set {}
-    heartrate set {}
-    PopulateVectors $units
-    MakeLapTable $units .t
-    MakeSessionTable $units .t2
-    MakeMap
+    file delete  [ ::fileutil::tempdir ][file separator]csv_lap.dat
+    file delete  [ ::fileutil::tempdir ][file separator]csv_session.dat
+    if {[ReadFile $units] == "1"} then {
+        #clear out the old data first
+        .t delete 0 last
+        .t2 delete 0 last
+        dist set {}
+        pace set {}
+        altitude set {}
+        cadence set {}
+        heartrate set {}
+        PopulateVectors $units
+        MakeLapTable $units .t
+        MakeSessionTable $units .t2
+        MakeMap
+        }
 }
 
 # Initialize data and GUI.
@@ -425,56 +437,60 @@ ttk::label .theMap
 set colh [concat {0 "Lap"} $distanceheader {0 "Time(min:sec)" 0 "Calories(kcal)"}]
 tablelist::tablelist .t -columns $colh -stretch all
 tablelist::tablelist .t2 -columns {0 "Attribute" 0 "Value"} -stretch all
-PopulateVectors $unitsystem
-MakeLapTable $unitsystem .t
-MakeSessionTable $unitsystem .t2
-MakeMap
+if {[ReadFile $unitsystem] == "1"} then {
+    PopulateVectors $unitsystem
+    MakeLapTable $unitsystem .t
+    MakeSessionTable $unitsystem .t2
+    MakeMap
 
 # Create the GUI.
 # Add frame and button.
-ttk::frame .f -relief ridge
-pack .f -side top -fill x
-ttk::button .f.b -text "Load File..." -command "Update $unitsystem"
-pack .f.b  -side left -fill x
+    ttk::frame .f -relief ridge
+    pack .f -side top -fill x
+    ttk::button .f.b -text "Load File..." -command "Update $unitsystem"
+    pack .f.b  -side left -fill x
 
 
 #Create a tabbed notebook.
-ttk::notebook .n
-ttk::frame .n.f1; # first page
-ttk::frame .n.f2; # second page
-ttk::frame .n.f3; # second page
-ttk::frame .n.f4; # second page
-.n add .n.f1 -text "Pace"
-.n add .n.f2 -text "Heartrate"
-.n add .n.f3 -text "Altitude"
-.n add .n.f4 -text "Cadence"
+    ttk::notebook .n
+    ttk::frame .n.f1; # first page
+    ttk::frame .n.f2; # second page
+    ttk::frame .n.f3; # second page
+    ttk::frame .n.f4; # second page
+    .n add .n.f1 -text "Pace"
+    .n add .n.f2 -text "Heartrate"
+    .n add .n.f3 -text "Altitude"
+    .n add .n.f4 -text "Cadence"
 
 # Create the graphs.
-MakeGraph1 $unitsystem
-MakeGraph2 $unitsystem
-MakeGraph3 $unitsystem
-MakeGraph4 $unitsystem
+    MakeGraph1 $unitsystem
+    MakeGraph2 $unitsystem
+    MakeGraph3 $unitsystem
+    MakeGraph4 $unitsystem
 
 # Bind a motion event to the procedure that generates
 # a marker for the points on the graph.
-bind mytag <Motion>  { doFindElement %W %x %y }
-blt::AddBindTag .n.f1.g1 mytag
-blt::AddBindTag .n.f2.g2 mytag
-blt::AddBindTag .n.f3.g3 mytag
-blt::AddBindTag .n.f4.g4 mytag
+    bind mytag <Motion>  { doFindElement %W %x %y }
+    blt::AddBindTag .n.f1.g1 mytag
+    blt::AddBindTag .n.f2.g2 mytag
+    blt::AddBindTag .n.f3.g3 mytag
+    blt::AddBindTag .n.f4.g4 mytag
 
-pack .n.f1.g1 .n.f2.g2 .n.f3.g3 .n.f4.g4 -side left -fill x -expand 1
+    pack .n.f1.g1 .n.f2.g2 .n.f3.g3 .n.f4.g4 -side left -fill x -expand 1
 
 # Add both widgets to the paned window.
-.pnd add .theMap
-.pnd add .n
-pack .pnd -fill both -expand 1
+    .pnd add .theMap
+    .pnd add .n
+    pack .pnd -fill both -expand 1
 
 # Add tables.
-pack .f .t2 .t -side top -fill x
+    pack .f .t2 .t -side top -fill x
 
-wm deiconify .
+    wm deiconify .
 
 # File cleanup.
 #file delete image.png
-file delete  [ ::fileutil::tempdir ][file separator]csv.dat
+    file delete  [ ::fileutil::tempdir ][file separator]csv.dat
+} else {
+    exit
+}
