@@ -401,9 +401,14 @@ proc doFindElement { g x y } {
 # Create the map on a label widget.
 proc MakeMap {} {
     # Call goroutine to create png
-    createImg csv.dat [ ::fileutil::tempdir ]
-    image create photo imgobj -file "image.png"
-    .theMap configure -image imgobj
+    if [catch {createImg csv.dat [ ::fileutil::tempdir ]} result] {
+        # error - probably no internet connection.
+        tk_messageBox -message "Unable to create map.  Check your internet connection." -type ok
+        puts stderr "Warning: $result"
+    } else {
+        image create photo imgobj -file "image.png"
+        .theMap configure -image imgobj
+    }
 }
 
 # Handle loading a new file.

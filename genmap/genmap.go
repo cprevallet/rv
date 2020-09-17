@@ -69,8 +69,10 @@ func Mapimg(fname string, fpath string) (image.Image) {
   ctx.AddMarker(sm.NewMarker(position[len(position)-1], color.RGBA{0xff, 0, 0, 0xff}, 12.0))
 
   img, err := ctx.Render()
+
+  // If no internet connection and tiles not in cache, we could fail here.
   if err != nil {
-    panic(err)
+    return nil
   }
   return img
 }

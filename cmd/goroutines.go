@@ -84,9 +84,13 @@ func CreateImg_Cmd(cdata C.ClientData, interp *C.struct_Tcl_Interp,
         
         // Create the map in "image.png"
         img := genmap.Mapimg(filename, filepath)  //image.Image - see genmap.go file
-        f, _ := os.Create("image.png")
-        png.Encode(f, img)
-	return TCL_OK
+        if img != nil {
+                f, _ := os.Create("image.png")
+                png.Encode(f, img)
+	        return TCL_OK
+        } else {
+               return TCL_ERROR
+        }
 }
 
 //export CreateCsv_Cmd
