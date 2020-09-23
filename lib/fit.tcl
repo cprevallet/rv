@@ -4,4 +4,3 @@
 package provide fit 1.0
 variable dir [file dirname [file normalize [info script]]]
 load [file join $dir libfit[info sharedlibextension]]
-

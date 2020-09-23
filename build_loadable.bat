@@ -1,7 +1,7 @@
 REM Build
-go build -o .\lib\fit.dll -buildmode=c-shared .\cmd\goroutines.go .\cmd\wrappers.go
+go build -o .\lib\libfit.dll -buildmode=c-shared .\cmd\goroutines.go .\cmd\wrappers.go
 REM Install
-REM mkdir .\interp\lib\fit
-REM copy .\lib\fit.dll .\interp\lib\fit\fit.dll
-REM copy .\lib\pkgIndex.tcl .\interp\lib\fit\pkgIndex.tcl
-REM copy .\lib\fit.tcl .\interp\lib\fit\fit.tcl
+mkdir .\interp\lib\fit1.0
+copy .\lib\libfit.dll .\interp\lib\fit1.0\libfit.dll
+copy .\lib\pkgIndex.tcl .\interp\lib\fit1.0\pkgIndex.tcl
+copy .\lib\fit.tcl .\interp\lib\fit1.0\fit.tcl
