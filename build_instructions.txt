@@ -1,0 +1,54 @@
+### Setup Linux Debian Buster chroot:
+
+sudo mkdir -p /srv/chroot/buster
+sudo debootstrap --arch amd64 buster /srv/chroot/buster http://deb.debian.org/debian
+
+# prevent that dpkg starts deamons in the chroot environment
+cat > ${MCHRDIR}/usr/sbin/policy-rc.d <<EOF
+#!/bin/sh
+exit 101
+EOF
+chmod a+x ${MCHRDIR}/usr/sbin/policy-rc.d
+
+# in the chroot "hard code" ischroot to true
+cp  ${MCHRDIR}/bin/true ${MCHRDIR}/usr/bin/ischroot
+
+#
+cp /etc/hosts ${MCHRDIR}/etc/hosts
+cp /etc/resolv.conf ${MCHRDIR}/etc/resolv.conf
+
+# that was what needs be done only once
+
+# mount stuff, you will need more often
+mount --bind /dev ${MCHRDIR}/dev
+mount --bind /dev/pts ${MCHRDIR}/dev/pts
+mount --bind /proc  ${MCHRDIR}/proc
+
+sudo chroot /srv/chroot/buster
+adduser chroot_user
+apt install sudo
+sudo usermod -a -G sudo chroot_user
+su - chroot_user
+cd /home/chroot_user
+vi .bashrc
+export GOROOT=/usr/lib/go-1.11/
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
+:wq
+exit
+source /home/chroot_user/.bashrc
+sudo apt-get install xserver-xephyr
+Xephyr -ac -screen 1280x1024 -br -reset -terminate 2> /dev/null :1 &
+DISPLAY=:1.0 ; export DISPLAY
+
+### Linux Setup (Debian Buster):
+apt install libtcl8.6 tcl8.6-dev tkblt tcllib tklib libtk8.6 golang-1.11 build-essential git
+go get github.com/tormoder/fit
+go get github.com/flopp/go-staticmaps
+go get github.com/golang/geo/s2
+mkdir cprevallet; cd cprevallet
+git clone http://github.com/cprevallet/rv.git
+cd rv
+# cp /usr/lib/tcltk/x86_64-linux-gnu/tkblt3.2/libtkblt3.2.so ./appdlls
+# cp /usr/lib/tcltk/x86_64-linux-gnu/tkblt3.2/graph.tcl ./appdlls
+./build_loadable.sh
