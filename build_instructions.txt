@@ -42,13 +42,22 @@ Xephyr -ac -screen 1280x1024 -br -reset -terminate 2> /dev/null :1 &
 DISPLAY=:1.0 ; export DISPLAY
 
 ### Linux Setup (Debian Buster):
+mkdir cprevallet; cd cprevallet
+git clone http://github.com/cprevallet/rv.git
 apt install libtcl8.6 tcl8.6-dev tkblt tcllib tklib libtk8.6 golang-1.11 build-essential git
 go get github.com/tormoder/fit
 go get github.com/flopp/go-staticmaps
 go get github.com/golang/geo/s2
-mkdir cprevallet; cd cprevallet
-git clone http://github.com/cprevallet/rv.git
 cd rv
-# cp /usr/lib/tcltk/x86_64-linux-gnu/tkblt3.2/libtkblt3.2.so ./appdlls
-# cp /usr/lib/tcltk/x86_64-linux-gnu/tkblt3.2/graph.tcl ./appdlls
 ./build_loadable.sh
+
+### Windows 10 Setup:
+mkdir cprevallet; cd cprevallet; mkdir cprevallet\interp
+git clone http://github.com/cprevallet/rv.git
+download ActiveStateTcl from here: https://www.activestate.com/products/tcl/downloads/
+unzip into cprevallet\interp
+go get github.com/tormoder/fit
+go get github.com/flopp/go-staticmaps
+go get github.com/golang/geo/s2
+cd rv
+build_loadable.bat
