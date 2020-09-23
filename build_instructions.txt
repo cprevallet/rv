@@ -52,10 +52,13 @@ cd rv
 ./build_loadable.sh
 
 ### Windows 10 Setup:
-mkdir cprevallet; cd cprevallet; mkdir cprevallet\interp
+mkdir cprevallet; cd cprevallet; mkdir cprevallet\interp; mkdir cprevallet\tkblt3.2
 git clone http://github.com/cprevallet/rv.git
 download ActiveStateTcl from here: https://www.activestate.com/products/tcl/downloads/
 unzip into cprevallet\interp
+download tkblt3.2 from here: https://sourceforge.net/projects/tkblt/
+unzip
+./configure; make; copy graph.tcl, pkgIndex.tcl, tkblt32.dll into cprevallet\tkblt3.2
 go get github.com/tormoder/fit
 go get github.com/flopp/go-staticmaps
 go get github.com/golang/geo/s2
