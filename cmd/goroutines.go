@@ -111,8 +111,8 @@ func CreateCsv_Cmd(cdata C.ClientData, interp *C.struct_Tcl_Interp,
 	return TCL_OK
 }
 
-//export Goroutines_Init
-func Goroutines_Init(interp *C.struct_Tcl_Interp) C.int {
+//export Fit_Init
+func Fit_Init(interp *C.struct_Tcl_Interp) C.int {
 	interp.createCommand("::createImg", (*C.Tcl_ObjCmdProc)(C.CreateImg_Cmd_cgo))
 	interp.createCommand("::createCsv", (*C.Tcl_ObjCmdProc)(C.CreateCsv_Cmd_cgo))
 	return TCL_OK
