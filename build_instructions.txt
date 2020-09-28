@@ -1,3 +1,24 @@
+### Linux Setup (Debian Buster):
+git clone http://github.com/cprevallet/rv.git
+cd $GOPATH/src/github.com/cprevallet/rv
+make deps
+make build
+make install
+
+### Windows 10 Setup:
+mkdir cprevallet; cd cprevallet; mkdir cprevallet\interp; mkdir cprevallet\tkblt3.2
+git clone http://github.com/cprevallet/rv.git
+download ActiveStateTcl from here: https://www.activestate.com/products/tcl/downloads/
+unzip into cprevallet\interp
+download tkblt3.2 from here: https://sourceforge.net/projects/tkblt/
+unzip
+./configure; make; copy graph.tcl, pkgIndex.tcl, tkblt32.dll into cprevallet\tkblt3.2
+go get github.com/tormoder/fit
+go get github.com/flopp/go-staticmaps
+go get github.com/golang/geo/s2
+cd rv
+build_loadable.bat
+
 ### Setup Linux Debian Buster chroot:
 
 sudo mkdir -p /srv/chroot/buster
@@ -41,26 +62,4 @@ sudo apt-get install xserver-xephyr
 Xephyr -ac -screen 1280x1024 -br -reset -terminate 2> /dev/null :1 &
 DISPLAY=:1.0 ; export DISPLAY
 
-### Linux Setup (Debian Buster):
-mkdir cprevallet; cd cprevallet
-git clone http://github.com/cprevallet/rv.git
-apt install libtcl8.6 tcl8.6-dev tkblt tcllib tklib libtk8.6 golang-1.11 build-essential git
-go get github.com/tormoder/fit
-go get github.com/flopp/go-staticmaps
-go get github.com/golang/geo/s2
-cd rv
-./build_loadable.sh
 
-### Windows 10 Setup:
-mkdir cprevallet; cd cprevallet; mkdir cprevallet\interp; mkdir cprevallet\tkblt3.2
-git clone http://github.com/cprevallet/rv.git
-download ActiveStateTcl from here: https://www.activestate.com/products/tcl/downloads/
-unzip into cprevallet\interp
-download tkblt3.2 from here: https://sourceforge.net/projects/tkblt/
-unzip
-./configure; make; copy graph.tcl, pkgIndex.tcl, tkblt32.dll into cprevallet\tkblt3.2
-go get github.com/tormoder/fit
-go get github.com/flopp/go-staticmaps
-go get github.com/golang/geo/s2
-cd rv
-build_loadable.bat
