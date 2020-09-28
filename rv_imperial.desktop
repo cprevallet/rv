@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Name=Runview (English)
+GenericName=Garmin Watch File Viewer Using English Unit System
+Comment=View runs from your Garmin brand watch
+# environmental file vars + executable + executable arguments
+Exec=rv_imperial
+Icon=/usr/share/pixmaps/smartwatch-charging.svg
+Terminal=false
+Type=Application
+Categories=Utility;
+StartupNotify=true

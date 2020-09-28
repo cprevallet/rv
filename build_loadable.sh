@@ -12,3 +12,6 @@ sudo cp paned.tcl /usr/share/tcltk/rv
 sudo cp prepare_packages.tcl /usr/share/tcltk/rv
 sudo cp rv_imperial.sh /usr/bin/rv_imperial
 sudo cp rv_metric.sh /usr/bin/rv_metric
+sudo cp smartwatch-charging.svg /usr/share/pixmaps
+sudo cp rv_imperial.desktop /usr/share/applications
+sudo cp rv_metric.desktop /usr/share/applications
