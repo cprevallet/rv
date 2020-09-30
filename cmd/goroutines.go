@@ -9,8 +9,8 @@ package main
 /*
 #cgo linux   CFLAGS: "-I/usr/include/tcl8.6"
 #cgo linux   LDFLAGS: -L/usr/lib/x86_64-linux-gnu -ltcl8.6 
-#cgo windows CFLAGS:  -IC:/GoProjects/src/tk8.6/include 
-#cgo windows LDFLAGS: -LC:/GoProjects/src/tk8.6/lib -ltcl86
+#cgo windows CFLAGS:  -IC:/GoProjects/src/github.com/cprevallet/rv/interp/include 
+#cgo windows LDFLAGS: -LC:/GoProjects/src/github.com/cprevallet/rv/interp/lib -ltcl86
 #include <stdlib.h>
 #include <tcl.h>
 #include <tclDecls.h>
