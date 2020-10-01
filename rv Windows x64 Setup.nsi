@@ -117,8 +117,8 @@ Section "Components" Components
     ;Create shortcuts
     CreateDirectory "$SMPROGRAMS\$StartMenuFolder"
     CreateShortCut "$SMPROGRAMS\$StartMenuFolder\Uninstall.lnk" "$INSTDIR\Uninstall.exe"
-    CreateShortCut "$SMPROGRAMS\$StartMenuFolder\rv_imperial.lnk" "$INSTDIR\rv_imperial.bat"
-    CreateShortCut "$SMPROGRAMS\$StartMenuFolder\rv_metric.lnk" "$INSTDIR\rv_metric.bat"
+    CreateShortCut "$SMPROGRAMS\$StartMenuFolder\rv_imperial.lnk" "$INSTDIR\rv_imperial.bat" "" "$INSTDIR\smartwatch-charging.ico" 0
+    CreateShortCut "$SMPROGRAMS\$StartMenuFolder\rv_metric.lnk" "$INSTDIR\rv_metric.bat" "" "$INSTDIR\smartwatch-charging.ico" 0
   
   !insertmacro MUI_STARTMENU_WRITE_END
 
