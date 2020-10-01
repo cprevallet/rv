@@ -91,8 +91,13 @@ Section "Components" Components
   ;nsExec::Exec 'setx STATIC_FILES "$INSTDIR\nw.package\static"'
 
   ;Install the following files
+  CreateDirectory $INSTDIR\interp
+  CreateDirectory $INSTDIR\runfiles
+  SetOutPath "$INSTDIR\\interp"
   File /r "interp\"
+  SetOutPath "$INSTDIR\\runfiles"
   File /r "runfiles\"
+  SetOutPath "$INSTDIR"
   File paned.tcl
   File prepare_packages.tcl
   File GORV.BAT
