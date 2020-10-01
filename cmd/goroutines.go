@@ -85,7 +85,7 @@ func CreateImg_Cmd(cdata C.ClientData, interp *C.struct_Tcl_Interp,
         // Create the map in "image.png"
         img := genmap.Mapimg(filename, filepath)  //image.Image - see genmap.go file
         if img != nil {
-                f, _ := os.Create("image.png")
+                f, _ := os.Create(filepath + string(os.PathSeparator) + "image.png") // For write access.
                 png.Encode(f, img)
 	        return TCL_OK
         } else {

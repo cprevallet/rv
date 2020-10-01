@@ -438,7 +438,8 @@ proc MakeMap { m } {
         tk_messageBox -message "Unable to create map.  Check your internet connection." -type ok
         puts stderr "Warning: $result"
     } else {
-        image create photo imgobj -file "image.png"
+        puts here
+        image create photo imgobj -file [concat [::fileutil::tempdir][file separator]image.png]
         $m configure -image imgobj
     }
 }
