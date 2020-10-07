@@ -4,47 +4,4 @@ cd $GOPATH/src/github.com/cprevallet/rv
 make install
 make run
 
-### Setup Linux Debian Buster chroot:
-
-sudo mkdir -p /srv/chroot/buster
-sudo debootstrap --arch amd64 buster /srv/chroot/buster http://deb.debian.org/debian
-
-# prevent that dpkg starts deamons in the chroot environment
-cat > ${MCHRDIR}/usr/sbin/policy-rc.d <<EOF
-#!/bin/sh
-exit 101
-EOF
-chmod a+x ${MCHRDIR}/usr/sbin/policy-rc.d
-
-# in the chroot "hard code" ischroot to true
-cp  ${MCHRDIR}/bin/true ${MCHRDIR}/usr/bin/ischroot
-
-#
-cp /etc/hosts ${MCHRDIR}/etc/hosts
-cp /etc/resolv.conf ${MCHRDIR}/etc/resolv.conf
-
-# that was what needs be done only once
-
-# mount stuff, you will need more often
-mount --bind /dev ${MCHRDIR}/dev
-mount --bind /dev/pts ${MCHRDIR}/dev/pts
-mount --bind /proc  ${MCHRDIR}/proc
-
-sudo chroot /srv/chroot/buster
-adduser chroot_user
-apt install sudo
-sudo usermod -a -G sudo chroot_user
-su - chroot_user
-cd /home/chroot_user
-vi .bashrc
-export GOROOT=/usr/lib/go-1.11/
-export GOPATH=$HOME/go
-export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
-:wq
-exit
-source /home/chroot_user/.bashrc
-sudo apt-get install xserver-xephyr
-Xephyr -ac -screen 1280x1024 -br -reset -terminate 2> /dev/null :1 &
-DISPLAY=:1.0 ; export DISPLAY
-
 
