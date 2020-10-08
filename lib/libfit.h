@@ -84,12 +84,9 @@ typedef struct { void *data; GoInt len; GoInt cap; } GoSlice;
 extern "C" {
 #endif
 
-
-extern int CreateImg_Cmd(ClientData p0, Tcl_Interp* p1, int p2, Tcl_Obj** p3);
-
-extern int CreateCsv_Cmd(ClientData p0, Tcl_Interp* p1, int p2, Tcl_Obj** p3);
-
-extern int Fit_Init(Tcl_Interp* p0);
+extern int CreateImg_Cmd(ClientData cdata, Tcl_Interp* interp, int objc, Tcl_Obj** objv);
+extern int CreateCsv_Cmd(ClientData cdata, Tcl_Interp* interp, int objc, Tcl_Obj** objv);
+extern int Fit_Init(Tcl_Interp* interp);
 
 #ifdef __cplusplus
 }

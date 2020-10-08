@@ -1,6 +1,6 @@
 ### Setup (Debian Buster and Windows 10):
 git clone http://github.com/cprevallet/rv.git
-cd $GOPATH/src/github.com/cprevallet/rv
+cd rv
 make install
 make run
 
