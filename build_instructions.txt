@@ -1,7 +1,13 @@
 ### Setup (Debian Buster and Windows 10):
 git clone http://github.com/cprevallet/rv.git
 cd rv
-make install
+make install (using sudo or as root under linux)
 make run
 
+# Packaging for Debian Linux
+dpkg-buildpackage -us -uc -ui -i
+
+# Packaging for Windows 10
+Start NSIS
+Drag rv Windows x64 Setup.nsi inside NSIS
 

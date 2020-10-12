@@ -1,0 +1,18 @@
+Source: rv
+Section: utils
+Priority: optional
+Maintainer: Craig Prevallet <penguintx@hotmail.com>
+Build-Depends: debhelper-compat (= 13), golang-go
+Standards-Version: 4.5.0
+Homepage: https://github.com/cprevallet/rv
+Vcs-Browser: https://github.com/cprevallet/rv
+Vcs-Git: https://github.com/cprevallet/rv
+Rules-Requires-Root: no
+
+Package: rv
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, tcl, libtcl8.6, tcl8.6-dev, tkblt, tcllib, tk, tklib, libtk8.6
+Description: View data in Garmin FIT files
+ rv is a desktop application for graphically displaying 
+ global positioning, pace, heartrate, and elevation 
+ data stored within FIT format files.
