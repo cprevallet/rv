@@ -1,0 +1,64 @@
+RV_METRIC(1)
+============
+:doctype: manpage
+
+
+NAME
+----
+rv_metric - load and plot data from a GPS running watch
+
+
+SYNOPSIS
+--------
+*rv_metric*
+
+
+DESCRIPTION
+-----------
+The rv_metric(1) command starts a graphical user interface to load
+and plot information from a USB-connected GPS watch.  
+The rv_metric(1) command was developed primarily with runners in mind
+but portions of it may also be useful for cyclists. In order to be
+compatible with this program, the GPS watch 
+must store its information internally via the Flexible and Interoperable 
+Data Transfer (or FIT) protocol.  No other protocol is currently supported.
+Information displayed
+can include latitude, longitude, pace, heartrate, and more.  The command
+can also manipulate files previously copied from the watch into a file folder.
+
+The rv_metric(1) command displays information in the metric unit system 
+(distances are in kilometers, pace is in min/km, etc.).  A companion command,
+rv_imperial, is also available for viewing the same information in the imperial
+unit system (distances are in miles, pace is in min/mile, etc.).
+
+Immediately upon execution, the command will prompt for the location of the
+data file.  After loading the file into memory, the graphical plotting widget 
+supports a click and drag zoom feature for closer inspection.  In
+addition, individual data point values can be displayed by hovering the
+mouse pointer over the plotted points.  
+If an internet connection is available, the command will also display a graphic 
+of an activity's GPS track.  Otherwise no track will be displayed.
+Loading additional FIT files individually
+is supported on the graphical interface without the need to restart the program.
+
+AUTHOR
+------
+Written by Craig S. Prevallet.
+
+
+RESOURCES
+---------
+GitHub: <https://github.com/cprevallet/rv/>
+
+
+SEE ALSO
+--------
+rv_imperial(1)
+
+
+COPYING
+-------
+Copyright \(C) 2020 Craig S. Prevallet
+
+See the LICENSE file for terms governing the use of this application.
+

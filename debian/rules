@@ -17,6 +17,9 @@ export DH_VERBOSE = 1
 %:
 	dh $@
 
+override_dh_installman:
+	make buildman
+	dh_installman
 
 # dh_make generated override targets
 # This is example for Cmake (See https://bugs.debian.org/641051 )

@@ -1,0 +1,76 @@
+'\" t
+.\"     Title: rv_imperial
+.\"    Author: [see the "AUTHOR(S)" section]
+.\" Generator: Asciidoctor 2.0.10
+.\"      Date: 2020-10-14
+.\"    Manual: \ \&
+.\"    Source: \ \&
+.\"  Language: English
+.\"
+.TH "RV_IMPERIAL" "1" "2020-10-14" "\ \&" "\ \&"
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.ss \n[.ss] 0
+.nh
+.ad l
+.de URL
+\fI\\$2\fP <\\$1>\\$3
+..
+.als MTO URL
+.if \n[.g] \{\
+.  mso www.tmac
+.  am URL
+.    ad l
+.  .
+.  am MTO
+.    ad l
+.  .
+.  LINKSTYLE blue R < >
+.\}
+.SH "NAME"
+rv_imperial \- load and plot data from a GPS running watch
+.SH "SYNOPSIS"
+.sp
+\fBrv_imperial\fP
+.SH "DESCRIPTION"
+.sp
+The rv_imperial(1) command starts a graphical user interface to load
+and plot information from a USB\-connected GPS watch.
+The rv_imperial(1) command was developed primarily with runners in mind
+but portions of it may also be useful for cyclists. In order to be
+compatible with this program, the GPS watch
+must store its information internally via the Flexible and Interoperable
+Data Transfer (or FIT) protocol.  No other protocol is currently supported.
+Information displayed
+can include latitude, longitude, pace, heartrate, and more.  The command
+can also manipulate files previously copied from the watch into a file folder.
+.sp
+The rv_imperial(1) command displays information in the imperial unit system (
+distances are in miles, pace is in min/mile, etc.).  A companion command,
+rv_metric, is also available for viewing the same information in the metric
+unit system (distances are in kilometers, pace is in min/km, etc.).
+.sp
+Immediately upon execution, the command will prompt for the location of the
+data file.  After loading the file into memory, the graphical plotting widget
+supports a click and drag zoom feature for closer inspection.  In
+addition, individual data point values can be displayed by hovering the
+mouse pointer over the plotted points.
+If an internet connection is available, the command will also display a graphic
+of an activity\(cqs GPS track.  Otherwise no track will be displayed.
+Loading additional FIT files individually
+is supported on the graphical interface without the need to restart the program.
+.SH "AUTHOR"
+.sp
+Written by Craig S. Prevallet.
+.SH "RESOURCES"
+.sp
+GitHub: \c
+.URL "https://github.com/cprevallet/rv/" "" ""
+.SH "SEE ALSO"
+.sp
+rv_metric(1)
+.SH "COPYING"
+.sp
+Copyright (C) 2020 Craig S. Prevallet
+.sp
+See the LICENSE file for terms governing the use of this application.

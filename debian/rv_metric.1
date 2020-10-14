@@ -1,0 +1,70 @@
+'\" t
+.\"     Title: rv_metric
+.\"    Author: [see the "AUTHOR" section]
+.\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
+.\"      Date: 2020-10-07
+.\"    Manual: \ \&
+.\"    Source: \ \&
+.\"  Language: English
+.\"
+.TH "RV_METRIC" "1" "2020\-10\-07" "\ \&" "\ \&"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+
+
+.SH "NAME"
+rv_metric \- load and plot data from a GPS running watch
+.SH "SYNOPSIS"
+
+.sp
+\fBrv_metric\fR
+
+.SH "DESCRIPTION"
+
+.sp
+The rv_metric(1) command starts a graphical user interface to load and plot information from a USB\-connected GPS watch\&. The rv_metric(1) command was developed primarily with runners in mind but portions of it may also be useful for cyclists\&. In order to be compatible with this program, the GPS watch must store its information internally via the Flexible and Interoperable Data Transfer (or FIT) protocol\&. No other protocol is currently supported\&. Information displayed can include latitude, longitude, pace, heartrate, and more\&. The command can also manipulate files previously copied from the watch into a file folder\&.
+.sp
+The rv_metric(1) command displays information in the metric unit system (distances are in kilometers, pace is in min/km, etc\&.)\&. A companion command, rv_imperial, is also available for viewing the same information in the imperial unit system (distances are in miles, pace is in min/mile, etc\&.)\&.
+.sp
+Immediately upon execution, the command will prompt for the location of the data file\&. After loading the file into memory, the graphical plotting widget supports a click and drag zoom feature for closer inspection\&. In addition, individual data point values can be displayed by hovering the mouse pointer over the plotted points\&. If an internet connection is available, the command will also display a graphic of an activity\(cqs GPS track\&. Otherwise no track will be displayed\&. Loading additional FIT files individually is supported on the graphical interface without the need to restart the program\&.
+
+.SH "AUTHOR"
+
+.sp
+Written by Craig S\&. Prevallet\&.
+
+.SH "RESOURCES"
+
+.sp
+GitHub: \m[blue]\fBhttps://github\&.com/cprevallet/rv/\fR\m[]
+
+.SH "SEE ALSO"
+
+.sp
+rv_imperial(1)
+
+.SH "COPYING"
+
+.sp
+Copyright (C) 2020 Craig S\&. Prevallet
+.sp
+See the LICENSE file for terms governing the use of this application\&.
+
+

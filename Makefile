@@ -4,6 +4,7 @@ GOBUILD=$(GOCMD) build
 GOCLEAN=$(GOCMD) clean
 GOTEST=$(GOCMD) test
 GOGET=$(GOCMD) get
+
 BINARY_NAME=libfit
 BINARY_WIN=$(BINARY_NAME).dll
 BINARY_UNIX=$(BINARY_NAME).so
@@ -24,6 +25,8 @@ ifeq ($(OS),Windows_NT)
 			if exist "interp" rmdir /Q /S .\interp
 else
 			rm -f ./lib/$(BINARY_UNIX)
+			rm -f ./docs/*.1
+			rm -f ./docs/*.gz
 endif
 
 deps:
@@ -74,6 +77,21 @@ else
 			install -D rv_metric.desktop $(DESTDIR)$(prefix)/share/applications/rv_metric.desktop
 endif
 
+buildman:
+ifeq ($(OS),Windows_NT)
+else
+			asciidoctor --backend manpage ./docs/*.txt
+endif
+
+installman: buildman
+ifeq ($(OS),Windows_NT)
+else
+			gzip -k ./docs/*.1
+			install -D ./docs/rv_imperial.1.gz $(DESTDIR)$(prefix)/share/man/man1/rv_imperial.1.gz
+			install -D ./docs/rv_metric.1.gz $(DESTDIR)$(prefix)/share/man/man1/rv_metric.1.gz
+endif
+
+
 uninstall:
 ifeq ($(OS),Windows_NT)
 else
@@ -84,6 +102,8 @@ else
 			rm $(DESTDIR)$(prefix)/share/applications/rv_metric.desktop
 			rm -rf $(DESTDIR)$(prefix)/share/tcltk/rv
 			rm -rf $(DESTDIR)$(prefix)/lib/tcltk/x86_64-linux-gnu/fit
+			rm $(DESTDIR)$(prefix)/share/man/man1/rv_imperial.1.gz
+			rm $(DESTDIR)$(prefix)/share/man/man1/rv_metric.1.gz
 endif
 
 run:

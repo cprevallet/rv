@@ -2,6 +2,7 @@
 git clone http://github.com/cprevallet/rv.git
 cd rv
 make install (using sudo or as root under linux)
+make installman (using sudo or as root under linux)
 make run
 
 # Packaging for Debian Linux
