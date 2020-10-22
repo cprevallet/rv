@@ -1,1 +1,1 @@
-START /MIN CMD.EXE /C GORV.BAT metric
+START /MIN CMD.EXE /C gorv.bat metric
