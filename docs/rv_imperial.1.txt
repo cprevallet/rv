@@ -16,7 +16,8 @@ SYNOPSIS
 DESCRIPTION
 -----------
 The rv_imperial(1) command starts a graphical user interface to load
-and plot information from a USB-connected GPS watch.  
+and plot information from a universal serial bus (USB) connected Global
+Positioning System (GPS) watch.  
 The rv_imperial(1) command was developed primarily with runners in mind
 but portions of it may also be useful for cyclists. In order to be
 compatible with this program, the GPS watch 
@@ -31,8 +32,12 @@ distances are in miles, pace is in min/mile, etc.).  A companion command,
 rv_metric, is also available for viewing the same information in the metric
 unit system (distances are in kilometers, pace is in min/km, etc.).
 
-Immediately upon execution, the command will prompt for the location of the
-data file.  After loading the file into memory, the graphical plotting widget 
+Immediately upon execution, the command will prompt the user for the location
+ of the data file. If you are executing the command under Windows, the command 
+ will first
+ attempt to locate where the watch has been plugged in via USB and 
+ open the directory containing the FIT files.
+ After loading the file into memory, the graphical plotting widget 
 supports a click and drag zoom feature for closer inspection.  In
 addition, individual data point values can be displayed by hovering the
 mouse pointer over the plotted points.  

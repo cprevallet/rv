@@ -457,8 +457,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="_description">DESCRIPTION</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The rv_metric(1) command starts a graphical user interface to load
-and plot information from a USB-connected GPS watch.
+<p>The rv_imperial(1) command starts a graphical user interface to load
+and plot information from a universal serial bus (USB) connected Global
+Positioning System (GPS) watch.
 The rv_metric(1) command was developed primarily with runners in mind
 but portions of it may also be useful for cyclists. In order to be
 compatible with this program, the GPS watch
@@ -475,8 +476,12 @@ rv_imperial, is also available for viewing the same information in the imperial
 unit system (distances are in miles, pace is in min/mile, etc.).</p>
 </div>
 <div class="paragraph">
-<p>Immediately upon execution, the command will prompt for the location of the
-data file.  After loading the file into memory, the graphical plotting widget
+<p>Immediately upon execution, the command will prompt the user for the location
+ of the data file. If you are executing the command under Windows, the command
+ will first
+ attempt to locate where the watch has been plugged in via USB and
+ open the directory containing the FIT files.
+ After loading the file into memory, the graphical plotting widget
 supports a click and drag zoom feature for closer inspection.  In
 addition, individual data point values can be displayed by hovering the
 mouse pointer over the plotted points.
@@ -525,7 +530,7 @@ is supported on the graphical interface without the need to restart the program.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-10-14 18:43:31 -0500
+Last updated 2020-10-22 15:41:51 -0500
 </div>
 </div>
 </body>
