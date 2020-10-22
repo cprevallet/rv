@@ -13,6 +13,8 @@ github.com/flopp/go-coordsparser v0.0.0-20160810104536-845bca739e26 h1:uDqAo+lfm
 github.com/flopp/go-coordsparser v0.0.0-20160810104536-845bca739e26/go.mod h1:t5EAdR9sDhKR06Ix2ZS/8jt8INpzeV3P5uVyEkCDYJc=
 github.com/flopp/go-staticmaps v0.0.0-20200829090108-3465b3349546 h1:ca93JpnGwxJpBzQA0h7ACLAU2TbC7WswPFGkdkKZBQQ=
 github.com/flopp/go-staticmaps v0.0.0-20200829090108-3465b3349546/go.mod h1:Iqp0rtaDj0I0KiLk9Ad2WGDdIOu3BdSnHYgY2s25eYk=
+github.com/flopp/go-staticmaps v0.0.0-20201017074834-112a0c57b9e3 h1:YJBa7MEE5iHJCfDo9ofto8RCA6IzwyuzSx3IOGbZAHw=
+github.com/flopp/go-staticmaps v0.0.0-20201017074834-112a0c57b9e3/go.mod h1:Iqp0rtaDj0I0KiLk9Ad2WGDdIOu3BdSnHYgY2s25eYk=
 github.com/fogleman/gg v1.3.0 h1:/7zJX8F6AaYQc57WQCyN9cAIz+4bCJGO9B+dyW29am8=
 github.com/fogleman/gg v1.3.0/go.mod h1:R/bRT+9gY/C5z7JzPU0zXsXHKM4/ayA+zqcVNZzPa1k=
 github.com/fzipp/gocyclo v0.0.0-20150627053110-6acd4345c835/go.mod h1:BjL/N0+C+j9uNX+1xcNuM9vdSIcXCZrQZUYbXOFbgN8=
