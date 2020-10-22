@@ -79,6 +79,7 @@ endif
 
 buildman:
 ifeq ($(OS),Windows_NT)
+			asciidoctor --backend html ./docs/*.txt
 else
 			asciidoctor --backend manpage ./docs/*.txt
 endif
